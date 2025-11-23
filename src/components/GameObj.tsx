@@ -21,7 +21,7 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
     // Render Content
     const getContent = () => {
         if (item.characterConfig) {
-            return <div dangerouslySetInnerHTML={{ __html: renderCharacterSVG(item.characterConfig) }} />;
+            return <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: renderCharacterSVG(item.characterConfig) }} />;
         }
 
         if (item.svgTemplate) {
@@ -38,18 +38,14 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
                      </>
                  );
             }
-            // Standard furniture already has svg property populated in catalog, but for initial items it might be just template
-            // Actually in my assets.ts I store the rendered string in `svg` for catalog items.
-            // But for starter items in `useGameState`, I only provided template/color.
-            // So I should generate it here if `item.svg` is missing but template is present.
             
             const templateFunc = SVG_TEMPLATES[item.svgTemplate];
             const svgString = item.svg || (templateFunc ? templateFunc(item.color || '#fff') : '');
-            return <div dangerouslySetInnerHTML={{ __html: svgString }} />;
+            return <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: svgString }} />;
         }
         
         if (item.svg && ASSETS_CHAR[item.svg]) {
-            return <div dangerouslySetInnerHTML={{ __html: ASSETS_CHAR[item.svg] }} />;
+            return <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: ASSETS_CHAR[item.svg] }} />;
         }
         
         if (item.emoji) {
@@ -58,7 +54,7 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
 
         // Fallback for catalog items that have pre-rendered svg
         if (item.svg) {
-             return <div dangerouslySetInnerHTML={{ __html: item.svg }} />;
+             return <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: item.svg }} />;
         }
 
         return null;
@@ -111,8 +107,6 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
         
         onUpdatePosition(item.id, finalX, finalY);
         
-        // Check collision/interaction (simplified)
-        // In a real app we might want to do this in parent by checking all rects
         if (onInteraction) {
             onInteraction(item);
         }
@@ -127,8 +121,7 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
                 top: item.y,
                 width: item.w,
                 height: item.h,
-                zIndex: isDragging ? 100 : undefined, // Force z-index on drag
-                // Retain original class styles via tailwind or global css
+                zIndex: isDragging ? 100 : undefined,
             }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
@@ -138,4 +131,3 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
         </div>
     );
 }
-

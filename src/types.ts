@@ -12,6 +12,12 @@ export interface CharacterConfig {
     pantsColor: string;
 }
 
+export interface SavedCharacter {
+    id: string;
+    name: string;
+    config: CharacterConfig;
+}
+
 export interface GameItem {
     id: string;
     type: 'furniture' | 'furniture-back' | 'furniture-wall' | 'furniture-complex' | 'item' | 'character' | 'wearable' | 'food';
@@ -31,6 +37,7 @@ export interface GameItem {
 export interface GameState {
     currentScene: SceneType;
     items: GameItem[];
+    savedCharacters: SavedCharacter[];
     isLightOn: boolean;
     fridgeOpen: boolean;
 }

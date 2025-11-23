@@ -15,7 +15,7 @@ import {
 interface CharacterBuilderProps {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (config: CharacterConfig) => void;
+    onSave: (config: CharacterConfig, name: string) => void;
     initialConfig?: CharacterConfig;
 }
 
@@ -34,11 +34,12 @@ const DEFAULT_CONFIG: CharacterConfig = {
 export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: CharacterBuilderProps) {
     const [config, setConfig] = useState<CharacterConfig>(initialConfig || DEFAULT_CONFIG);
     const [activeTab, setActiveTab] = useState<'body' | 'hair' | 'face' | 'clothes'>('body');
+    const [name, setName] = useState("New Friend");
 
     if (!isOpen) return null;
 
     const handleSave = () => {
-        onSave(config);
+        onSave(config, name);
         onClose();
     };
 
@@ -47,7 +48,7 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 pointer-events-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[300] p-4 pointer-events-auto">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
                 {/* Header */}
                 <div className="p-4 border-b flex justify-between items-center bg-gray-50">
@@ -55,8 +56,20 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
                     <button onClick={onClose} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
                 </div>
 
+                {/* Name Input */}
+                <div className="px-8 pt-6">
+                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Name</label>
+                     <input 
+                        type="text" 
+                        value={name} 
+                        onChange={(e) => setName(e.target.value)}
+                        className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none font-bold text-lg"
+                        placeholder="Character Name"
+                     />
+                </div>
+
                 {/* Preview */}
-                <div className="p-8 bg-blue-50 flex justify-center items-center min-h-[200px]">
+                <div className="p-8 flex justify-center items-center min-h-[200px]">
                     <div 
                         className="w-32 h-48 transform transition-transform hover:scale-105"
                         dangerouslySetInnerHTML={{ __html: renderCharacterSVG(config) }}
@@ -237,11 +250,10 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
                         onClick={handleSave}
                         className="px-6 py-2 rounded-full font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-lg transition-transform active:scale-95"
                     >
-                        Save Character
+                        Save
                     </button>
                 </div>
             </div>
         </div>
     );
 }
-

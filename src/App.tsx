@@ -12,7 +12,9 @@ export default function App() {
     addItem, 
     updateItemPosition, 
     removeItem, 
-    resetGame 
+    resetGame,
+    addSavedCharacter,
+    removeSavedCharacter
   } = useGameState();
 
   const handleSpawnItem = (catItem: CatalogItem) => {
@@ -45,6 +47,14 @@ export default function App() {
       characterConfig: config
     };
     addItem(newItem);
+  };
+
+  const handleSaveCharacter = (config: CharacterConfig, name: string) => {
+    addSavedCharacter({
+        id: `saved_${Date.now()}`,
+        name,
+        config
+    });
   };
 
   const handleInteraction = (item: GameItem) => {
@@ -92,9 +102,12 @@ export default function App() {
       </div>
       <UI 
         currentScene={state.currentScene} 
+        savedCharacters={state.savedCharacters}
         onSwitchScene={switchScene} 
         onSpawnItem={handleSpawnItem}
         onSpawnCharacter={handleSpawnCharacter}
+        onSaveCharacter={handleSaveCharacter}
+        onDeleteCharacter={removeSavedCharacter}
         onReset={resetGame}
       />
     </div>

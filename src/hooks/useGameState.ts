@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { GameState, GameItem, SceneType } from '../types';
+import type { GameState, GameItem, SceneType, SavedCharacter } from '../types';
 
 const STORAGE_KEY = 'miniLifeWorld_v6_react';
 const DEFAULT_SCENE: SceneType = 'livingroom';
@@ -7,6 +7,7 @@ const DEFAULT_SCENE: SceneType = 'livingroom';
 const INITIAL_STATE: GameState = {
     currentScene: DEFAULT_SCENE,
     items: [],
+    savedCharacters: [],
     isLightOn: true,
     fridgeOpen: false
 };
@@ -16,7 +17,12 @@ export function useGameState() {
         const s = localStorage.getItem(STORAGE_KEY);
         if (s) {
             try {
-                return JSON.parse(s);
+                const parsed = JSON.parse(s);
+                // Migration: ensure savedCharacters exists
+                if (!parsed.savedCharacters) {
+                    parsed.savedCharacters = [];
+                }
+                return parsed;
             } catch (e) {
                 console.error("Failed to load state", e);
             }
@@ -29,7 +35,6 @@ export function useGameState() {
     // Persist state
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        // We won't show toast on every state change as it's too frequent in React
     }, [state]);
 
     const saveGame = useCallback(() => {
@@ -69,6 +74,22 @@ export function useGameState() {
         }));
     };
 
+    const addSavedCharacter = (char: SavedCharacter) => {
+        setState(prev => ({ 
+            ...prev, 
+            savedCharacters: [...(prev.savedCharacters || []), char] 
+        }));
+        saveGame();
+    };
+
+    const removeSavedCharacter = (id: string) => {
+        setState(prev => ({ 
+            ...prev, 
+            savedCharacters: (prev.savedCharacters || []).filter(c => c.id !== id) 
+        }));
+        saveGame();
+    };
+
     const resetGame = () => {
         if (confirm("Clear world?")) {
             localStorage.removeItem(STORAGE_KEY);
@@ -85,12 +106,12 @@ export function useGameState() {
             
             const starter: GameItem[] = [
                 { id: 'sofa_start', type: 'furniture', svgTemplate: 'sofa', color: '#FF9A9E', x: GAME_WIDTH/2 - 100, y: FLOOR_Y - 80, scene: 'livingroom', w: 200, h: 120 },
-                { id: 'girl', type: 'character', svg: 'char_girl', x: 200, y: FLOOR_Y - 50, scene: 'livingroom' },
+                { id: 'girl', type: 'character', svg: 'char_girl', x: 200, y: FLOOR_Y - 50, scene: 'livingroom', w: 90, h: 140 },
                 { id: 'plant_start', type: 'furniture', svgTemplate: 'plant', color: '#2A9D8F', x: 50, y: FLOOR_Y - 50, scene: 'livingroom', w: 60, h: 100 }
             ];
             setState(prev => ({ ...prev, items: starter }));
         }
-    }, []); // Run once on mount if empty
+    }, []); 
 
     return {
         state,
@@ -102,7 +123,8 @@ export function useGameState() {
         updateItemPosition,
         removeItem,
         resetGame,
-        saveGame
+        saveGame,
+        addSavedCharacter,
+        removeSavedCharacter
     };
 }
-
