@@ -34,12 +34,27 @@ export interface GameItem {
     characterConfig?: CharacterConfig; // New field for custom characters
 }
 
+export interface RoomConfig {
+    wallColor: string;
+    floorColor: string;
+}
+
+export interface SavedRoom {
+    id: string;
+    name: string;
+    scene: SceneType;
+    items: GameItem[];
+    config: RoomConfig;
+}
+
 export interface GameState {
     currentScene: SceneType;
     items: GameItem[];
     savedCharacters: SavedCharacter[];
     isLightOn: boolean;
     fridgeOpen: boolean;
+    roomConfigs: Record<SceneType, RoomConfig>;
+    savedRooms: SavedRoom[];
 }
 
 export interface CatalogItem {

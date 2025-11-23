@@ -1,15 +1,23 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { GameState, GameItem, SceneType, SavedCharacter } from '../types';
+import type { GameState, GameItem, SceneType, SavedCharacter, RoomConfig, SavedRoom } from '../types';
 
 const STORAGE_KEY = 'miniLifeWorld_v6_react';
 const DEFAULT_SCENE: SceneType = 'livingroom';
+
+const DEFAULT_CONFIGS: Record<SceneType, RoomConfig> = {
+    livingroom: { wallColor: '#FFE5D9', floorColor: '#D4A373' },
+    kitchen: { wallColor: '#E0FBFC', floorColor: '#3D5A80' },
+    bathroom: { wallColor: '#CDB4DB', floorColor: '#A2D2FF' }
+};
 
 const INITIAL_STATE: GameState = {
     currentScene: DEFAULT_SCENE,
     items: [],
     savedCharacters: [],
     isLightOn: true,
-    fridgeOpen: false
+    fridgeOpen: false,
+    roomConfigs: DEFAULT_CONFIGS,
+    savedRooms: []
 };
 
 export function useGameState() {
@@ -18,10 +26,14 @@ export function useGameState() {
         if (s) {
             try {
                 const parsed = JSON.parse(s);
-                // Migration: ensure savedCharacters exists
-                if (!parsed.savedCharacters) {
-                    parsed.savedCharacters = [];
-                }
+                // Migration: ensure all fields exist
+                if (!parsed.savedCharacters) parsed.savedCharacters = [];
+                if (!parsed.roomConfigs) parsed.roomConfigs = DEFAULT_CONFIGS;
+                if (!parsed.savedRooms) parsed.savedRooms = [];
+                
+                // Ensure deep merge of configs in case of partial missing
+                parsed.roomConfigs = { ...DEFAULT_CONFIGS, ...parsed.roomConfigs };
+                
                 return parsed;
             } catch (e) {
                 console.error("Failed to load state", e);
@@ -90,6 +102,68 @@ export function useGameState() {
         saveGame();
     };
 
+    const updateRoomConfig = (scene: SceneType, config: Partial<RoomConfig>) => {
+        setState(prev => ({
+            ...prev,
+            roomConfigs: {
+                ...prev.roomConfigs,
+                [scene]: { ...prev.roomConfigs[scene], ...config }
+            }
+        }));
+    };
+
+    const saveRoom = (name: string) => {
+        const currentItems = state.items.filter(i => i.scene === state.currentScene);
+        const currentConfig = state.roomConfigs[state.currentScene];
+        // Deep copy items to avoid reference issues if we mutate them later (though we treat state as immutable)
+        // JSON parse/stringify is a cheap deep copy for this data
+        const itemsCopy = JSON.parse(JSON.stringify(currentItems));
+
+        const newSavedRoom: SavedRoom = {
+            id: `room_${Date.now()}`,
+            name,
+            scene: state.currentScene,
+            items: itemsCopy,
+            config: currentConfig
+        };
+
+        setState(prev => ({
+            ...prev,
+            savedRooms: [...prev.savedRooms, newSavedRoom]
+        }));
+        saveGame();
+    };
+
+    const loadRoom = (id: string) => {
+        const saved = state.savedRooms.find(r => r.id === id);
+        if (!saved) return;
+        
+        // We need to regenerate IDs for items to avoid conflicts? 
+        // Or just replace them. If we replace, the old IDs are gone from the scene.
+        // But if we have cross-scene references (none currently), it might matter.
+        // Let's just use the saved items as is.
+        
+        const otherItems = state.items.filter(i => i.scene !== saved.scene);
+        
+        setState(prev => ({
+            ...prev,
+            items: [...otherItems, ...saved.items],
+            roomConfigs: {
+                ...prev.roomConfigs,
+                [saved.scene]: saved.config
+            },
+            currentScene: saved.scene // Switch to the loaded room's scene type
+        }));
+    };
+
+    const deleteSavedRoom = (id: string) => {
+        setState(prev => ({
+            ...prev,
+            savedRooms: prev.savedRooms.filter(r => r.id !== id)
+        }));
+        saveGame();
+    };
+
     const resetGame = () => {
         if (confirm("Clear world?")) {
             localStorage.removeItem(STORAGE_KEY);
@@ -115,10 +189,15 @@ export function useGameState() {
 
     // Migration check for hot-reload
     useEffect(() => {
-        if (!state.savedCharacters) {
-            setState(prev => ({ ...prev, savedCharacters: [] }));
+        if (!state.savedCharacters || !state.roomConfigs || !state.savedRooms) {
+            setState(prev => ({ 
+                ...prev, 
+                savedCharacters: prev.savedCharacters || [],
+                roomConfigs: prev.roomConfigs || DEFAULT_CONFIGS,
+                savedRooms: prev.savedRooms || []
+            }));
         }
-    }, [state.savedCharacters]); 
+    }, [state.savedCharacters, state.roomConfigs, state.savedRooms]); 
 
     return {
         state,
@@ -132,6 +211,10 @@ export function useGameState() {
         resetGame,
         saveGame,
         addSavedCharacter,
-        removeSavedCharacter
+        removeSavedCharacter,
+        updateRoomConfig,
+        saveRoom,
+        loadRoom,
+        deleteSavedRoom
     };
 }

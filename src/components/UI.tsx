@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { CATALOG } from '../data/assets';
 import { renderCharacterSVG } from '../data/characterAssets';
-import type { SceneType, CatalogItem, CharacterConfig, SavedCharacter } from '../types';
+import type { SceneType, CatalogItem, CharacterConfig, SavedCharacter, RoomConfig, SavedRoom } from '../types';
 import { CharacterBuilder } from './CharacterBuilder';
 
 interface UIProps {
     currentScene: SceneType;
     savedCharacters: SavedCharacter[];
+    roomConfigs: Record<SceneType, RoomConfig>;
+    savedRooms: SavedRoom[];
     onSwitchScene: (s: SceneType) => void;
     onSpawnItem: (item: CatalogItem) => void;
     onSpawnCharacter: (config: CharacterConfig) => void;
@@ -14,19 +16,47 @@ interface UIProps {
     onDeleteCharacter: (id: string) => void;
     onReset: () => void;
     onToggleLight?: () => void;
+    onUpdateRoomConfig: (scene: SceneType, config: Partial<RoomConfig>) => void;
+    onSaveRoom: (name: string) => void;
+    onLoadRoom: (id: string) => void;
+    onDeleteRoom: (id: string) => void;
 }
 
-export function UI({ currentScene, savedCharacters = [], onSwitchScene, onSpawnItem, onSpawnCharacter, onSaveCharacter, onDeleteCharacter, onReset }: UIProps) {
+export function UI({ 
+    currentScene, 
+    savedCharacters = [], 
+    roomConfigs,
+    savedRooms,
+    onSwitchScene, 
+    onSpawnItem, 
+    onSpawnCharacter, 
+    onSaveCharacter, 
+    onDeleteCharacter, 
+    onReset,
+    onUpdateRoomConfig,
+    onSaveRoom,
+    onLoadRoom,
+    onDeleteRoom
+}: UIProps) {
     const [isCatalogOpen, setCatalogOpen] = useState(false);
     const [isCharacterManagerOpen, setCharacterManagerOpen] = useState(false);
     const [isBuilderOpen, setBuilderOpen] = useState(false);
+    const [isRoomSettingsOpen, setRoomSettingsOpen] = useState(false);
+    const [isSavedRoomsOpen, setSavedRoomsOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(Object.keys(CATALOG)[0]);
+    const [newRoomName, setNewRoomName] = useState('');
 
     const handleSaveNewCharacter = (config: CharacterConfig, name: string) => {
         onSaveCharacter(config, name);
-        // Builder closes automatically by its own logic via onClose, but we ensure manager stays open
         setBuilderOpen(false);
         setCharacterManagerOpen(true);
+    };
+
+    const handleSaveRoom = () => {
+        if (newRoomName.trim()) {
+            onSaveRoom(newRoomName);
+            setNewRoomName('');
+        }
     };
 
     return (
@@ -38,15 +68,28 @@ export function UI({ currentScene, savedCharacters = [], onSwitchScene, onSpawnI
                 </div>
             </div>
 
-            {/* Character Manager Toggle */}
-            <button onClick={() => setCharacterManagerOpen(true)} className="absolute bottom-24 right-24 bg-purple-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition pointer-events-auto z-50 flex items-center justify-center" title="Characters">
-                <span className="text-2xl">👥</span>
-            </button>
+            {/* Floating Action Buttons */}
+            <div className="absolute bottom-24 right-4 flex gap-4 pointer-events-auto items-end">
+                 {/* Saved Rooms */}
+                 <button onClick={() => setSavedRoomsOpen(true)} className="bg-blue-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition flex items-center justify-center w-16 h-16" title="Saved Rooms">
+                    <span className="text-2xl">💾</span>
+                </button>
+                
+                {/* Room Settings */}
+                <button onClick={() => setRoomSettingsOpen(true)} className="bg-pink-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition flex items-center justify-center w-16 h-16" title="Room Settings">
+                    <span className="text-2xl">🎨</span>
+                </button>
 
-            {/* Catalog Toggle */}
-            <button onClick={() => setCatalogOpen(!isCatalogOpen)} className="absolute bottom-24 right-4 bg-yellow-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition pointer-events-auto z-50 flex items-center justify-center" title="Furniture Shop">
-                <span className="text-2xl">🛍️</span>
-            </button>
+                {/* Character Manager */}
+                <button onClick={() => setCharacterManagerOpen(true)} className="bg-purple-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition flex items-center justify-center w-16 h-16" title="Characters">
+                    <span className="text-2xl">👥</span>
+                </button>
+
+                {/* Catalog Toggle */}
+                <button onClick={() => setCatalogOpen(!isCatalogOpen)} className="bg-yellow-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition flex items-center justify-center w-16 h-16" title="Furniture Shop">
+                    <span className="text-2xl">🛍️</span>
+                </button>
+            </div>
 
             {/* Reset */}
             <button onClick={onReset} className="absolute top-4 right-4 bg-white p-2 rounded-full shadow hover:bg-red-50 transition pointer-events-auto border-2 border-gray-100 text-gray-600">
@@ -80,11 +123,118 @@ export function UI({ currentScene, savedCharacters = [], onSwitchScene, onSpawnI
                 <div className="catalog-grid">
                     {CATALOG[activeTab]?.map((item, idx) => (
                         <div key={idx} className="catalog-item" onClick={() => { onSpawnItem(item); setCatalogOpen(false); }}>
-                            <div dangerouslySetInnerHTML={{ __html: item.svg }} />
+                            <div className="w-full h-full flex items-center justify-center pointer-events-none" dangerouslySetInnerHTML={{ __html: item.svg }} />
                         </div>
                     ))}
                 </div>
             </div>
+
+            {/* Room Settings Modal */}
+            {isRoomSettingsOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[250] p-4 pointer-events-auto">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col">
+                        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
+                            <h2 className="text-xl font-bold text-gray-800">Room Settings ({currentScene})</h2>
+                            <button onClick={() => setRoomSettingsOpen(false)} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+                        </div>
+                        <div className="p-6 space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Wall Color</label>
+                                <div className="flex items-center gap-3">
+                                    <input 
+                                        type="color" 
+                                        value={roomConfigs[currentScene]?.wallColor || '#ffffff'}
+                                        onChange={(e) => onUpdateRoomConfig(currentScene, { wallColor: e.target.value })}
+                                        className="w-12 h-12 rounded cursor-pointer border-0 p-0"
+                                    />
+                                    <span className="text-gray-500 text-sm font-mono">{roomConfigs[currentScene]?.wallColor}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-bold text-gray-700 mb-2">Floor Color</label>
+                                <div className="flex items-center gap-3">
+                                    <input 
+                                        type="color" 
+                                        value={roomConfigs[currentScene]?.floorColor || '#ffffff'}
+                                        onChange={(e) => onUpdateRoomConfig(currentScene, { floorColor: e.target.value })}
+                                        className="w-12 h-12 rounded cursor-pointer border-0 p-0"
+                                    />
+                                    <span className="text-gray-500 text-sm font-mono">{roomConfigs[currentScene]?.floorColor}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Saved Rooms Modal */}
+            {isSavedRoomsOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[250] p-4 pointer-events-auto">
+                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[80vh]">
+                        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
+                            <h2 className="text-xl font-bold text-gray-800">Saved Rooms</h2>
+                            <button onClick={() => setSavedRoomsOpen(false)} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
+                        </div>
+                        
+                        <div className="p-4 border-b bg-gray-50">
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Save Current Room</label>
+                            <div className="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    placeholder="e.g. Dream Kitchen"
+                                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+                                    value={newRoomName}
+                                    onChange={(e) => setNewRoomName(e.target.value)}
+                                    onKeyDown={(e) => e.key === 'Enter' && handleSaveRoom()}
+                                />
+                                <button 
+                                    onClick={handleSaveRoom}
+                                    disabled={!newRoomName.trim()}
+                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    Save
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                            {savedRooms.length === 0 ? (
+                                <div className="text-center text-gray-400 py-8">No saved rooms yet</div>
+                            ) : (
+                                savedRooms.map(room => (
+                                    <div key={room.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100 hover:border-blue-200 transition">
+                                        <div className="flex items-center gap-3 overflow-hidden">
+                                            <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-lg border shadow-sm shrink-0">
+                                                {room.scene === 'kitchen' ? '🍳' : room.scene === 'bathroom' ? '🛁' : '🛋️'}
+                                            </div>
+                                            <div className="truncate">
+                                                <div className="font-bold text-gray-800 truncate">{room.name}</div>
+                                                <div className="text-xs text-gray-500">{room.items.length} items</div>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-2 shrink-0">
+                                            <button 
+                                                onClick={() => { onLoadRoom(room.id); setSavedRoomsOpen(false); }}
+                                                className="p-2 bg-green-100 text-green-600 rounded hover:bg-green-200"
+                                                title="Load"
+                                            >
+                                                📂
+                                            </button>
+                                            <button 
+                                                onClick={() => onDeleteRoom(room.id)}
+                                                className="p-2 bg-red-100 text-red-600 rounded hover:bg-red-200"
+                                                title="Delete"
+                                            >
+                                                🗑️
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Character Manager Modal */}
             {isCharacterManagerOpen && !isBuilderOpen && (

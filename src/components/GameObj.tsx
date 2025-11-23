@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import type { GameItem } from '../types';
 import { ASSETS_CHAR, SVG_TEMPLATES } from '../data/assets';
 import { renderCharacterSVG } from '../data/characterAssets';
@@ -9,14 +9,22 @@ interface GameObjProps {
     onInteraction?: (item: GameItem, targetId?: string) => void;
     onToggle?: (item: GameItem) => void;
     isFridgeOpen?: boolean;
+    onDragStart?: () => void;
+    onDragEnd?: (id: string, x: number, y: number) => void;
 }
 
-export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFridgeOpen }: GameObjProps) {
+export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFridgeOpen, onDragStart, onDragEnd }: GameObjProps) {
     const [isDragging, setIsDragging] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
     const dragStart = useRef({ x: 0, y: 0 });
     const initialPos = useRef({ x: 0, y: 0 });
     const hasMoved = useRef(false);
+
+    // Store latest callbacks and item to avoid stale closures in event listeners
+    const propsRef = useRef({ item, onUpdatePosition, onInteraction, onToggle, onDragStart, onDragEnd });
+    useEffect(() => {
+        propsRef.current = { item, onUpdatePosition, onInteraction, onToggle, onDragStart, onDragEnd };
+    });
 
     // Render Content
     const getContent = () => {
@@ -60,17 +68,9 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
         return null;
     };
 
-    const handlePointerDown = (e: React.PointerEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-        hasMoved.current = false;
-        dragStart.current = { x: e.clientX, y: e.clientY };
-        initialPos.current = { x: item.x, y: item.y };
-        (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    };
-
-    const handlePointerMove = (e: React.PointerEvent) => {
-        if (!isDragging) return;
+    // Stable handlers that use refs
+    const handleWindowMove = useCallback((e: PointerEvent) => {
+        const { item } = propsRef.current;
         const dx = e.clientX - dragStart.current.x;
         const dy = e.clientY - dragStart.current.y;
         
@@ -89,28 +89,65 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
             ref.current.style.left = `${nx}px`;
             ref.current.style.top = `${ny}px`;
         }
-    };
+    }, []);
 
-    const handlePointerUp = (e: React.PointerEvent) => {
-        if (!isDragging) return;
+    const handleWindowUp = useCallback((e: PointerEvent) => {
+        const { item, onUpdatePosition, onInteraction, onToggle, onDragEnd } = propsRef.current;
+
+        window.removeEventListener('pointermove', handleWindowMove);
+        window.removeEventListener('pointerup', handleWindowUp);
+        
         setIsDragging(false);
-        (e.target as HTMLElement).releasePointerCapture(e.pointerId);
         
         if (!hasMoved.current && onToggle) {
             onToggle(item);
-            return;
         }
 
         // Update final position
-        const finalX = parseFloat(ref.current?.style.left || item.x.toString());
-        const finalY = parseFloat(ref.current?.style.top || item.y.toString());
-        
-        onUpdatePosition(item.id, finalX, finalY);
-        
-        if (onInteraction) {
-            onInteraction(item);
+        let finalX = item.x;
+        let finalY = item.y;
+
+        if (ref.current) {
+             finalX = parseFloat(ref.current.style.left || item.x.toString());
+             finalY = parseFloat(ref.current.style.top || item.y.toString());
         }
+        
+        if (hasMoved.current) {
+            onUpdatePosition(item.id, finalX, finalY);
+            if (onDragEnd) {
+                onDragEnd(item.id, finalX, finalY);
+            }
+        }
+
+        if (onInteraction && !hasMoved.current) {
+             onInteraction(item);
+        } else if (onInteraction && hasMoved.current) {
+             onInteraction(item);
+        }
+    }, [handleWindowMove]); // Dependency on handleWindowMove needed for removeEventListener
+
+    const handlePointerDown = (e: React.PointerEvent) => {
+        e.preventDefault();
+        
+        setIsDragging(true);
+        hasMoved.current = false;
+        dragStart.current = { x: e.clientX, y: e.clientY };
+        const { item, onDragStart } = propsRef.current;
+        initialPos.current = { x: item.x, y: item.y };
+        
+        if (onDragStart) onDragStart();
+
+        window.addEventListener('pointermove', handleWindowMove);
+        window.addEventListener('pointerup', handleWindowUp);
     };
+
+    // Cleanup on unmount only
+    useEffect(() => {
+        return () => {
+            window.removeEventListener('pointermove', handleWindowMove);
+            window.removeEventListener('pointerup', handleWindowUp);
+        };
+    }, [handleWindowMove, handleWindowUp]);
 
     return (
         <div
@@ -122,10 +159,9 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
                 width: item.w,
                 height: item.h,
                 zIndex: isDragging ? 100 : undefined,
+                // Removed pointerEvents: none to ensure we can always grab it again and it doesn't get stuck
             }}
             onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
         >
             {getContent()}
         </div>
