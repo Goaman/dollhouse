@@ -91,7 +91,7 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
         }
     }, []);
 
-    const handleWindowUp = useCallback((e: PointerEvent) => {
+    const handleWindowUp = useCallback(() => {
         const { item, onUpdatePosition, onInteraction, onToggle, onDragEnd } = propsRef.current;
 
         window.removeEventListener('pointermove', handleWindowMove);

@@ -1,7 +1,8 @@
+import { useState, useCallback } from 'react';
 import { useGameState } from './hooks/useGameState';
 import { GameObj } from './components/GameObj';
 import { UI } from './components/UI';
-import type { GameItem, CatalogItem } from './types';
+import type { GameItem, CatalogItem, CharacterConfig } from './types';
 
 export default function App() {
   const { 
@@ -12,7 +13,12 @@ export default function App() {
     addItem, 
     updateItemPosition, 
     removeItem, 
-    resetGame 
+    addSavedCharacter,
+    removeSavedCharacter,
+    updateRoomConfig,
+    saveRoom,
+    loadRoom,
+    deleteSavedRoom
   } = useGameState();
 
   // ... Rest of the component logic can be simplified for testing if needed, but let's try full content
@@ -33,6 +39,28 @@ export default function App() {
       subtype: catItem.svgTemplate === 'fridge' ? 'fridge' : undefined
     };
     addItem(newItem);
+  };
+
+  const handleSpawnCharacter = (config: CharacterConfig) => {
+    const newItem: GameItem = {
+      id: `char_${Date.now()}`,
+      scene: state.currentScene,
+      x: window.innerWidth / 2 - 45,
+      y: window.innerHeight / 2 - 70,
+      type: 'character',
+      w: 90,
+      h: 140,
+      characterConfig: config
+    };
+    addItem(newItem);
+  };
+
+  const handleSaveCharacter = (config: CharacterConfig, name: string) => {
+    addSavedCharacter({
+        id: `saved_${Date.now()}`,
+        name,
+        config
+    });
   };
 
   const handleInteraction = (item: GameItem) => {
@@ -83,6 +111,16 @@ export default function App() {
         onSwitchScene={switchScene} 
         onSpawnItem={handleSpawnItem}
         onReset={resetGame}
+        savedCharacters={state.savedCharacters}
+        roomConfigs={state.roomConfigs}
+        savedRooms={state.savedRooms}
+        onSpawnCharacter={handleSpawnCharacter}
+        onSaveCharacter={handleSaveCharacter}
+        onDeleteCharacter={removeSavedCharacter}
+        onUpdateRoomConfig={updateRoomConfig}
+        onSaveRoom={saveRoom}
+        onLoadRoom={loadRoom}
+        onDeleteRoom={deleteSavedRoom}
       />
     </div>
   );
