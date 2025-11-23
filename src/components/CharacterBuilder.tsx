@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { CharacterConfig } from '../types';
+import { DraggableDialog } from './DraggableDialog';
 import { 
     SKIN_COLORS, 
     HAIR_COLORS, 
@@ -48,14 +49,12 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[300] p-4 pointer-events-auto">
-            <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
-                {/* Header */}
-                <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                    <h2 className="text-xl font-bold text-gray-800">Character Builder</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
-                </div>
-
+        <DraggableDialog
+            title="Character Builder"
+            onClose={onClose}
+            width="w-full max-w-md"
+        >
+            <div className="flex flex-col h-full max-h-[80vh]">
                 {/* Name Input */}
                 <div className="px-8 pt-6">
                      <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Name</label>
@@ -65,7 +64,7 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
                         onChange={(e) => setName(e.target.value)}
                         className="w-full px-4 py-2 rounded-lg border-2 border-gray-200 focus:border-purple-500 focus:outline-none font-bold text-lg"
                         placeholder="Character Name"
-                     />
+                    />
                 </div>
 
                 {/* Preview */}
@@ -254,6 +253,6 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
                     </button>
                 </div>
             </div>
-        </div>
+        </DraggableDialog>
     );
 }

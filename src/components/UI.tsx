@@ -3,6 +3,7 @@ import { CATALOG } from '../data/assets';
 import { renderCharacterSVG } from '../data/characterAssets';
 import type { SceneType, CatalogItem, CharacterConfig, SavedCharacter, RoomConfig, SavedRoom } from '../types';
 import { CharacterBuilder } from './CharacterBuilder';
+import { DraggableDialog } from './DraggableDialog';
 
 interface UIProps {
     currentScene: SceneType;
@@ -104,78 +105,81 @@ export function UI({
             </div>
 
             {/* Catalog Modal */}
-            <div className={`catalog-modal ${isCatalogOpen ? 'open' : ''}`}>
-                <div className="catalog-header">
-                    <h2 className="text-xl font-bold text-gray-800">Furniture Shop</h2>
-                    <button onClick={() => setCatalogOpen(false)} className="text-gray-500 hover:text-red-500 font-bold text-xl px-2">✕</button>
-                </div>
-                <div className="catalog-tabs">
-                    {Object.keys(CATALOG).map(cat => (
-                        <button 
-                            key={cat} 
-                            className={`tab-btn ${activeTab === cat ? 'active' : ''}`}
-                            onClick={() => setActiveTab(cat)}
-                        >
-                            {cat}
-                        </button>
-                    ))}
-                </div>
-                <div className="catalog-grid">
-                    {CATALOG[activeTab]?.map((item, idx) => (
-                        <div key={idx} className="catalog-item" onClick={() => { onSpawnItem(item); setCatalogOpen(false); }}>
-                            <div className="w-full h-full flex items-center justify-center pointer-events-none" dangerouslySetInnerHTML={{ __html: item.svg }} />
+            {isCatalogOpen && (
+                <DraggableDialog
+                    title="Furniture Shop"
+                    onClose={() => setCatalogOpen(false)}
+                    initialX={window.innerWidth / 2 - 250}
+                    initialY={window.innerHeight - 450}
+                    width="w-[500px]"
+                >
+                    <div className="flex flex-col h-[400px]">
+                        <div className="catalog-tabs sticky top-0 z-10">
+                            {Object.keys(CATALOG).map(cat => (
+                                <button 
+                                    key={cat} 
+                                    className={`tab-btn ${activeTab === cat ? 'active' : ''}`}
+                                    onClick={() => setActiveTab(cat)}
+                                >
+                                    {cat}
+                                </button>
+                            ))}
                         </div>
-                    ))}
-                </div>
-            </div>
+                        <div className="catalog-grid">
+                            {CATALOG[activeTab]?.map((item, idx) => (
+                                <div key={idx} className="catalog-item" onClick={() => { onSpawnItem(item); /* Keep open to spawn multiple? or close? Original closed. */ setCatalogOpen(false); }}>
+                                    <div className="w-full h-full flex items-center justify-center pointer-events-none" dangerouslySetInnerHTML={{ __html: item.svg }} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </DraggableDialog>
+            )}
 
             {/* Room Settings Modal */}
             {isRoomSettingsOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[250] p-4 pointer-events-auto">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm overflow-hidden flex flex-col">
-                        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                            <h2 className="text-xl font-bold text-gray-800">Room Settings ({currentScene})</h2>
-                            <button onClick={() => setRoomSettingsOpen(false)} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
-                        </div>
-                        <div className="p-6 space-y-6">
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Wall Color</label>
-                                <div className="flex items-center gap-3">
-                                    <input 
-                                        type="color" 
-                                        value={roomConfigs[currentScene]?.wallColor || '#ffffff'}
-                                        onChange={(e) => onUpdateRoomConfig(currentScene, { wallColor: e.target.value })}
-                                        className="w-12 h-12 rounded cursor-pointer border-0 p-0"
-                                    />
-                                    <span className="text-gray-500 text-sm font-mono">{roomConfigs[currentScene]?.wallColor}</span>
-                                </div>
+                <DraggableDialog
+                    title={`Room Settings (${currentScene})`}
+                    onClose={() => setRoomSettingsOpen(false)}
+                    width="w-full max-w-sm"
+                >
+                    <div className="p-6 space-y-6">
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Wall Color</label>
+                            <div className="flex items-center gap-3">
+                                <input 
+                                    type="color" 
+                                    value={roomConfigs[currentScene]?.wallColor || '#ffffff'}
+                                    onChange={(e) => onUpdateRoomConfig(currentScene, { wallColor: e.target.value })}
+                                    className="w-12 h-12 rounded cursor-pointer border-0 p-0"
+                                />
+                                <span className="text-gray-500 text-sm font-mono">{roomConfigs[currentScene]?.wallColor}</span>
                             </div>
-                            <div>
-                                <label className="block text-sm font-bold text-gray-700 mb-2">Floor Color</label>
-                                <div className="flex items-center gap-3">
-                                    <input 
-                                        type="color" 
-                                        value={roomConfigs[currentScene]?.floorColor || '#ffffff'}
-                                        onChange={(e) => onUpdateRoomConfig(currentScene, { floorColor: e.target.value })}
-                                        className="w-12 h-12 rounded cursor-pointer border-0 p-0"
-                                    />
-                                    <span className="text-gray-500 text-sm font-mono">{roomConfigs[currentScene]?.floorColor}</span>
-                                </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-gray-700 mb-2">Floor Color</label>
+                            <div className="flex items-center gap-3">
+                                <input 
+                                    type="color" 
+                                    value={roomConfigs[currentScene]?.floorColor || '#ffffff'}
+                                    onChange={(e) => onUpdateRoomConfig(currentScene, { floorColor: e.target.value })}
+                                    className="w-12 h-12 rounded cursor-pointer border-0 p-0"
+                                />
+                                <span className="text-gray-500 text-sm font-mono">{roomConfigs[currentScene]?.floorColor}</span>
                             </div>
                         </div>
                     </div>
-                </div>
+                </DraggableDialog>
             )}
 
             {/* Saved Rooms Modal */}
             {isSavedRoomsOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[250] p-4 pointer-events-auto">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[80vh]">
-                        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                            <h2 className="text-xl font-bold text-gray-800">Saved Rooms</h2>
-                            <button onClick={() => setSavedRoomsOpen(false)} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
-                        </div>
-                        
+                <DraggableDialog
+                    title="Saved Rooms"
+                    onClose={() => setSavedRoomsOpen(false)}
+                    width="w-full max-w-md"
+                >
+                    <div className="flex flex-col max-h-[60vh]">
                         <div className="p-4 border-b bg-gray-50">
                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Save Current Room</label>
                             <div className="flex gap-2">
@@ -233,50 +237,47 @@ export function UI({
                             )}
                         </div>
                     </div>
-                </div>
+                </DraggableDialog>
             )}
 
             {/* Character Manager Modal */}
             {isCharacterManagerOpen && !isBuilderOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[250] p-4 pointer-events-auto">
-                    <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[80vh]">
-                        <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-                            <h2 className="text-xl font-bold text-gray-800">My Characters</h2>
-                            <button onClick={() => setCharacterManagerOpen(false)} className="text-gray-500 hover:text-red-500 text-2xl">&times;</button>
-                        </div>
-                        
-                        <div className="flex-1 overflow-y-auto p-4 grid grid-cols-2 gap-4">
-                            <button 
-                                onClick={() => setBuilderOpen(true)}
-                                className="aspect-[3/4] border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:border-purple-500 hover:text-purple-500 hover:bg-purple-50 transition-all"
-                            >
-                                <span className="text-4xl mb-2">+</span>
-                                <span className="font-bold">Create New</span>
-                            </button>
+                <DraggableDialog
+                    title="My Characters"
+                    onClose={() => setCharacterManagerOpen(false)}
+                    width="w-full max-w-lg"
+                >
+                    <div className="flex-1 overflow-y-auto p-4 grid grid-cols-2 gap-4 max-h-[60vh]">
+                        <button 
+                            onClick={() => setBuilderOpen(true)}
+                            className="aspect-[3/4] border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:border-purple-500 hover:text-purple-500 hover:bg-purple-50 transition-all"
+                        >
+                            <span className="text-4xl mb-2">+</span>
+                            <span className="font-bold">Create New</span>
+                        </button>
 
-                            {savedCharacters.map(char => (
-                                <div key={char.id} className="relative group aspect-[3/4] bg-gray-50 rounded-xl border-2 border-gray-100 hover:border-purple-200 transition-all overflow-hidden">
-                                    <div 
-                                        className="absolute inset-0 flex items-center justify-center p-2 cursor-pointer"
-                                        onClick={() => { onSpawnCharacter(char.config); setCharacterManagerOpen(false); }}
-                                    >
-                                        <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: renderCharacterSVG(char.config) }} />
-                                    </div>
-                                    <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-90 p-2 text-center border-t border-gray-100">
-                                        <span className="font-bold text-sm text-gray-800 block truncate">{char.name}</span>
-                                    </div>
-                                    <button 
-                                        onClick={(e) => { e.stopPropagation(); onDeleteCharacter(char.id); }}
-                                        className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow text-red-500 hover:bg-red-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                        title="Delete"
-                                    >
-                                        🗑️
-                                    </button>
+                        {savedCharacters.map(char => (
+                            <div key={char.id} className="relative group aspect-[3/4] bg-gray-50 rounded-xl border-2 border-gray-100 hover:border-purple-200 transition-all overflow-hidden">
+                                <div 
+                                    className="absolute inset-0 flex items-center justify-center p-2 cursor-pointer"
+                                    onClick={() => { onSpawnCharacter(char.config); setCharacterManagerOpen(false); }}
+                                >
+                                    <div className="w-full h-full" dangerouslySetInnerHTML={{ __html: renderCharacterSVG(char.config) }} />
                                 </div>
-                            ))}
-                        </div>
+                                <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-90 p-2 text-center border-t border-gray-100">
+                                    <span className="font-bold text-sm text-gray-800 block truncate">{char.name}</span>
+                                </div>
+                                <button 
+                                    onClick={(e) => { e.stopPropagation(); onDeleteCharacter(char.id); }}
+                                    className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow text-red-500 hover:bg-red-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                    title="Delete"
+                                >
+                                    🗑️
+                                </button>
+                            </div>
+                        ))}
                     </div>
-                </div>
+                </DraggableDialog>
             )}
 
             {/* Character Builder Modal */}

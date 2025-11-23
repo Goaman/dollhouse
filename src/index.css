@@ -95,16 +95,8 @@ body {
 }
 .nav-btn:hover, .nav-btn.active { background: #FFD6E0; transform: translateY(-3px); box-shadow: 0 4px 0 #FF9A9E; }
 
-/* Catalog Modal */
-.catalog-modal {
-    position: absolute; bottom: -100%; left: 0; width: 100%; height: 70vh;
-    background: #fff; border-radius: 20px 20px 0 0;
-    box-shadow: 0 -5px 30px rgba(0,0,0,0.2);
-    transition: bottom 0.3s ease-in-out; pointer-events: auto;
-    display: flex; flex-direction: column; z-index: 300;
-}
-.catalog-modal.open { bottom: 0; }
-.catalog-header { padding: 15px; border-bottom: 2px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+/* Catalog Modal Styles reused in DraggableDialog */
+
 .catalog-tabs { display: flex; gap: 10px; padding: 10px; overflow-x: auto; background: #fafafa; }
 .tab-btn {
     padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #ddd;
