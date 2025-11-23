@@ -5,6 +5,8 @@ export interface CharacterConfig {
     hairStyle: string;
     hairColor: string;
     eyeStyle: string; // 'normal', 'happy', 'glasses'
+    eyeColor: string;
+    noseStyle: string; // 'dot', 'curve', 'triangle'
     mouthStyle: string; // 'smile', 'surprised', 'neutral'
     shirtColor: string;
     pantsColor: string;

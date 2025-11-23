@@ -1,7 +1,7 @@
 import { useGameState } from './hooks/useGameState';
 import { GameObj } from './components/GameObj';
 import { UI } from './components/UI';
-import type { GameItem, CatalogItem } from './types';
+import type { GameItem, CatalogItem, CharacterConfig } from './types';
 
 export default function App() {
   const { 
@@ -15,8 +15,6 @@ export default function App() {
     resetGame 
   } = useGameState();
 
-  // ... Rest of the component logic can be simplified for testing if needed, but let's try full content
-  
   const handleSpawnItem = (catItem: CatalogItem) => {
     const newItem: GameItem = {
       id: `obj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -31,6 +29,20 @@ export default function App() {
       emoji: catItem.emoji,
       svg: catItem.svg,
       subtype: catItem.svgTemplate === 'fridge' ? 'fridge' : undefined
+    };
+    addItem(newItem);
+  };
+
+  const handleSpawnCharacter = (config: CharacterConfig) => {
+    const newItem: GameItem = {
+      id: `char_${Date.now()}`,
+      scene: state.currentScene,
+      x: window.innerWidth / 2 - 45,
+      y: window.innerHeight / 2 - 70,
+      type: 'character',
+      w: 90,
+      h: 140,
+      characterConfig: config
     };
     addItem(newItem);
   };
@@ -82,9 +94,9 @@ export default function App() {
         currentScene={state.currentScene} 
         onSwitchScene={switchScene} 
         onSpawnItem={handleSpawnItem}
+        onSpawnCharacter={handleSpawnCharacter}
         onReset={resetGame}
       />
     </div>
   );
 }
-

@@ -18,6 +18,14 @@ export const HAIR_COLORS = [
     '#A1C4FD', // Blue
 ];
 
+export const EYE_COLORS = [
+    '#333333', // Black
+    '#5D4037', // Brown
+    '#2A9D8F', // Teal/Green
+    '#457B9D', // Blue
+    '#9B5DE5', // Purple
+];
+
 export const CLOTHING_COLORS = [
     '#FF9A9E', // Pink
     '#A1C4FD', // Blue
@@ -37,12 +45,19 @@ export const HAIR_STYLES: Record<string, (color: string) => string> = {
     bob: (c) => `<path d="M20 35 Q50 5 80 35 L80 65 Q80 75 70 75 L30 75 Q20 75 20 65 Z" fill="${c}" />`,
 };
 
-export const EYE_STYLES: Record<string, string> = {
-    normal: `<circle cx="42" cy="32" r="3" fill="#333"/><circle cx="58" cy="32" r="3" fill="#333"/>`,
-    happy: `<path d="M39 32 Q42 29 45 32" fill="none" stroke="#333" stroke-width="2"/><path d="M55 32 Q58 29 61 32" fill="none" stroke="#333" stroke-width="2"/>`,
-    glasses: `<circle cx="42" cy="32" r="6" fill="none" stroke="#333" stroke-width="2"/><circle cx="58" cy="32" r="6" fill="none" stroke="#333" stroke-width="2"/><line x1="48" y1="32" x2="52" y2="32" stroke="#333" stroke-width="2"/>`,
-    wink: `<circle cx="42" cy="32" r="3" fill="#333"/><path d="M55 32 Q58 29 61 32" fill="none" stroke="#333" stroke-width="2"/>`,
-    sleepy: `<path d="M39 32 Q42 35 45 32" fill="none" stroke="#333" stroke-width="2"/><path d="M55 32 Q58 35 61 32" fill="none" stroke="#333" stroke-width="2"/>`
+export const EYE_STYLES: Record<string, (color: string) => string> = {
+    normal: (c) => `<circle cx="42" cy="32" r="3" fill="${c}"/><circle cx="58" cy="32" r="3" fill="${c}"/>`,
+    happy: (c) => `<path d="M39 32 Q42 29 45 32" fill="none" stroke="${c}" stroke-width="2"/><path d="M55 32 Q58 29 61 32" fill="none" stroke="${c}" stroke-width="2"/>`,
+    glasses: (c) => `<circle cx="42" cy="32" r="6" fill="none" stroke="#333" stroke-width="2"/><circle cx="58" cy="32" r="6" fill="none" stroke="#333" stroke-width="2"/><line x1="48" y1="32" x2="52" y2="32" stroke="#333" stroke-width="2"/><circle cx="42" cy="32" r="2" fill="${c}"/><circle cx="58" cy="32" r="2" fill="${c}"/>`,
+    wink: (c) => `<circle cx="42" cy="32" r="3" fill="${c}"/><path d="M55 32 Q58 29 61 32" fill="none" stroke="${c}" stroke-width="2"/>`,
+    sleepy: (c) => `<path d="M39 32 Q42 35 45 32" fill="none" stroke="${c}" stroke-width="2"/><path d="M55 32 Q58 35 61 32" fill="none" stroke="${c}" stroke-width="2"/>`
+};
+
+export const NOSE_STYLES: Record<string, string> = {
+    dot: `<circle cx="50" cy="40" r="2" fill="#cc8e69"/>`,
+    curve: `<path d="M48 38 Q46 42 50 42" fill="none" stroke="#cc8e69" stroke-width="2" stroke-linecap="round"/>`,
+    triangle: `<path d="M48 42 L52 42 L50 38 Z" fill="#cc8e69"/>`,
+    button: `<ellipse cx="50" cy="40" rx="3" ry="2" fill="#cc8e69"/>`
 };
 
 export const MOUTH_STYLES: Record<string, string> = {
@@ -53,12 +68,20 @@ export const MOUTH_STYLES: Record<string, string> = {
 };
 
 export function renderCharacterSVG(config: CharacterConfig): string {
-    const { skinColor, hairStyle, hairColor, eyeStyle, mouthStyle, shirtColor, pantsColor } = config;
+    const { skinColor, hairStyle, hairColor, eyeStyle, eyeColor, noseStyle, mouthStyle, shirtColor, pantsColor } = config;
 
     const hairSvg = HAIR_STYLES[hairStyle] ? HAIR_STYLES[hairStyle](hairColor) : HAIR_STYLES['short'](hairColor);
-    const eyesSvg = EYE_STYLES[eyeStyle] || EYE_STYLES['normal'];
+    // Default to black if eye color is missing (backward compatibility or init)
+    const safeEyeColor = eyeColor || '#333333';
+    const eyesSvg = EYE_STYLES[eyeStyle] ? EYE_STYLES[eyeStyle](safeEyeColor) : EYE_STYLES['normal'](safeEyeColor);
+    const noseSvg = NOSE_STYLES[noseStyle] || NOSE_STYLES['dot'];
     const mouthSvg = MOUTH_STYLES[mouthStyle] || MOUTH_STYLES['smile'];
 
+    // Make nose color slightly darker than skin
+    // For simplicity, we'll just use a semi-transparent dark overlay for nose if we wanted dynamic,
+    // but hardcoded #cc8e69 is fine for now as it works with most light skins.
+    // To be better, we could let noseSvg take a color, but let's keep it simple.
+    
     return `
         <svg viewBox="0 0 100 150" class="drop-shadow-lg">
             <g transform="translate(5,5)">
@@ -75,6 +98,7 @@ export function renderCharacterSVG(config: CharacterConfig): string {
                 
                 <!-- Face -->
                 ${eyesSvg}
+                ${noseSvg}
                 ${mouthSvg}
                 
                 <!-- Hair Front -->

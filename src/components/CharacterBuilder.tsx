@@ -3,9 +3,11 @@ import type { CharacterConfig } from '../types';
 import { 
     SKIN_COLORS, 
     HAIR_COLORS, 
-    CLOTHING_COLORS, 
+    CLOTHING_COLORS,
+    EYE_COLORS,
     HAIR_STYLES, 
     EYE_STYLES, 
+    NOSE_STYLES,
     MOUTH_STYLES, 
     renderCharacterSVG 
 } from '../data/characterAssets';
@@ -22,6 +24,8 @@ const DEFAULT_CONFIG: CharacterConfig = {
     hairStyle: 'short',
     hairColor: HAIR_COLORS[0],
     eyeStyle: 'normal',
+    eyeColor: '#333333',
+    noseStyle: 'dot',
     mouthStyle: 'smile',
     shirtColor: CLOTHING_COLORS[0],
     pantsColor: '#333333'
@@ -43,7 +47,7 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 pointer-events-auto">
             <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
                 {/* Header */}
                 <div className="p-4 border-b flex justify-between items-center bg-gray-50">
@@ -129,7 +133,7 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
                     {activeTab === 'face' && (
                         <>
                             <div className="mb-6">
-                                <label className="block text-sm font-bold text-gray-700 mb-3">Eyes</label>
+                                <label className="block text-sm font-bold text-gray-700 mb-3">Eyes Shape</label>
                                 <div className="grid grid-cols-3 gap-3">
                                     {Object.keys(EYE_STYLES).map(style => (
                                         <button
@@ -142,6 +146,36 @@ export function CharacterBuilder({ isOpen, onClose, onSave, initialConfig }: Cha
                                     ))}
                                 </div>
                             </div>
+                            
+                            <div className="mb-6">
+                                <label className="block text-sm font-bold text-gray-700 mb-3">Eye Color</label>
+                                <div className="flex flex-wrap gap-3">
+                                    {EYE_COLORS.map(color => (
+                                        <button
+                                            key={color}
+                                            className={`w-8 h-8 rounded-full border-2 shadow-sm transition-transform hover:scale-110 ${config.eyeColor === color ? 'border-purple-500 ring-2 ring-purple-200' : 'border-gray-200'}`}
+                                            style={{ backgroundColor: color }}
+                                            onClick={() => updateConfig('eyeColor', color)}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="mb-6">
+                                <label className="block text-sm font-bold text-gray-700 mb-3">Nose</label>
+                                <div className="grid grid-cols-3 gap-3">
+                                    {Object.keys(NOSE_STYLES).map(style => (
+                                        <button
+                                            key={style}
+                                            className={`p-2 rounded-lg border-2 text-sm font-medium capitalize transition-all ${config.noseStyle === style ? 'border-purple-500 bg-purple-50 text-purple-700' : 'border-gray-200 hover:border-gray-300'}`}
+                                            onClick={() => updateConfig('noseStyle', style)}
+                                        >
+                                            {style}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                             <div>
                                 <label className="block text-sm font-bold text-gray-700 mb-3">Mouth</label>
                                 <div className="grid grid-cols-3 gap-3">
