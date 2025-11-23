@@ -16,7 +16,7 @@ interface UIProps {
     onToggleLight?: () => void;
 }
 
-export function UI({ currentScene, savedCharacters, onSwitchScene, onSpawnItem, onSpawnCharacter, onSaveCharacter, onDeleteCharacter, onReset }: UIProps) {
+export function UI({ currentScene, savedCharacters = [], onSwitchScene, onSpawnItem, onSpawnCharacter, onSaveCharacter, onDeleteCharacter, onReset }: UIProps) {
     const [isCatalogOpen, setCatalogOpen] = useState(false);
     const [isCharacterManagerOpen, setCharacterManagerOpen] = useState(false);
     const [isBuilderOpen, setBuilderOpen] = useState(false);

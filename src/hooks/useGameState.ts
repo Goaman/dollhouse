@@ -113,6 +113,13 @@ export function useGameState() {
         }
     }, []); 
 
+    // Migration check for hot-reload
+    useEffect(() => {
+        if (!state.savedCharacters) {
+            setState(prev => ({ ...prev, savedCharacters: [] }));
+        }
+    }, [state.savedCharacters]); 
+
     return {
         state,
         showSaveToast,
