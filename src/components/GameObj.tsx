@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import type { GameItem } from '../types';
 import { ASSETS_CHAR, SVG_TEMPLATES } from '../data/assets';
+import { renderCharacterSVG } from '../data/characterAssets';
 
 interface GameObjProps {
     item: GameItem;
@@ -19,6 +20,10 @@ export function GameObj({ item, onUpdatePosition, onInteraction, onToggle, isFri
 
     // Render Content
     const getContent = () => {
+        if (item.characterConfig) {
+            return <div dangerouslySetInnerHTML={{ __html: renderCharacterSVG(item.characterConfig) }} />;
+        }
+
         if (item.svgTemplate) {
             if (item.subtype === 'fridge') {
                  // Fridge special handling

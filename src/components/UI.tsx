@@ -1,27 +1,28 @@
 import { useState } from 'react';
 import { CATALOG } from '../data/assets';
-import type { SceneType, CatalogItem } from '../types';
+import type { SceneType, CatalogItem, CharacterConfig } from '../types';
+import { CharacterBuilder } from './CharacterBuilder';
 
 interface UIProps {
     currentScene: SceneType;
     onSwitchScene: (s: SceneType) => void;
     onSpawnItem: (item: CatalogItem) => void;
+    onSpawnCharacter: (config: CharacterConfig) => void;
     onReset: () => void;
-    onToggleLight?: () => void; // Switch is usually on wall, but maybe UI controls it too?
+    onToggleLight?: () => void;
 }
 
-export function UI({ currentScene, onSwitchScene, onSpawnItem, onReset }: UIProps) {
+export function UI({ currentScene, onSwitchScene, onSpawnItem, onSpawnCharacter, onReset }: UIProps) {
     const [isCatalogOpen, setCatalogOpen] = useState(false);
+    const [isCharacterBuilderOpen, setCharacterBuilderOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(Object.keys(CATALOG)[0]);
     const [scenarioText, setScenarioText] = useState<string | null>(null);
 
     const handleGenerateScenario = async () => {
-        // Mocking the API call behavior
         setScenarioText("A fun day at the dollhouse! Everyone is planning a surprise party.");
     };
 
     const handleThoughts = () => {
-         // Mock
          alert("Thinking...");
     };
 
@@ -48,6 +49,11 @@ export function UI({ currentScene, onSwitchScene, onSpawnItem, onReset }: UIProp
                     <button onClick={() => setScenarioText(null)} className="bg-gray-100 hover:bg-gray-200 px-4 py-1 rounded-full text-sm font-bold text-gray-600">Got it!</button>
                 </div>
             )}
+
+            {/* Character Builder Toggle */}
+            <button onClick={() => setCharacterBuilderOpen(true)} className="absolute bottom-24 right-24 bg-purple-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition pointer-events-auto z-50 flex items-center justify-center" title="Create Character">
+                <span className="text-2xl">👤</span>
+            </button>
 
             {/* Catalog Toggle */}
             <button onClick={() => setCatalogOpen(!isCatalogOpen)} className="absolute bottom-24 right-4 bg-yellow-400 p-4 rounded-full shadow-lg border-4 border-white text-white hover:scale-110 transition pointer-events-auto z-50 flex items-center justify-center" title="Furniture Shop">
@@ -91,7 +97,13 @@ export function UI({ currentScene, onSwitchScene, onSpawnItem, onReset }: UIProp
                     ))}
                 </div>
             </div>
+
+            {/* Character Builder Modal - Rendered conditionally but acts as overlay */}
+            <CharacterBuilder 
+                isOpen={isCharacterBuilderOpen}
+                onClose={() => setCharacterBuilderOpen(false)}
+                onSave={onSpawnCharacter}
+            />
         </div>
     );
 }
-

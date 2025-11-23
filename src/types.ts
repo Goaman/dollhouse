@@ -1,5 +1,15 @@
 export type SceneType = 'livingroom' | 'kitchen' | 'bathroom';
 
+export interface CharacterConfig {
+    skinColor: string;
+    hairStyle: string;
+    hairColor: string;
+    eyeStyle: string; // 'normal', 'happy', 'glasses'
+    mouthStyle: string; // 'smile', 'surprised', 'neutral'
+    shirtColor: string;
+    pantsColor: string;
+}
+
 export interface GameItem {
     id: string;
     type: 'furniture' | 'furniture-back' | 'furniture-wall' | 'furniture-complex' | 'item' | 'character' | 'wearable' | 'food';
@@ -13,6 +23,7 @@ export interface GameItem {
     emoji?: string;
     svg?: string; // Can be the rendered SVG string or the character SVG key
     subtype?: string; // e.g. 'fridge'
+    characterConfig?: CharacterConfig; // New field for custom characters
 }
 
 export interface GameState {
@@ -32,4 +43,3 @@ export interface CatalogItem {
     svg: string; // The preview SVG string
     emoji?: string;
 }
-
