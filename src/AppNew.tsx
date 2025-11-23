@@ -1,4 +1,3 @@
-import { useState, useCallback } from 'react';
 import { useGameState } from './hooks/useGameState';
 import { GameObj } from './components/GameObj';
 import { UI } from './components/UI';
@@ -13,6 +12,7 @@ export default function App() {
     addItem, 
     updateItemPosition, 
     removeItem, 
+    resetGame,
     addSavedCharacter,
     removeSavedCharacter,
     updateRoomConfig,
