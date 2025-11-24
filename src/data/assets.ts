@@ -20,7 +20,27 @@ export const SVG_TEMPLATES: Record<string, (c: string) => string> = {
     toilet: (c) => `<svg viewBox="0 0 80 120"><rect x="15" y="60" width="50" height="40" rx="5" fill="white"/><rect x="20" y="20" width="40" height="40" rx="5" fill="white"/><rect x="15" y="60" width="50" height="8" fill="${c}" opacity="0.5"/><ellipse cx="40" cy="100" rx="20" ry="5" fill="#eee"/></svg>`,
     sink: (_c) => `<svg viewBox="0 0 100 120"><rect x="25" y="60" width="50" height="60" fill="#ddd"/><rect x="10" y="40" width="80" height="20" rx="5" fill="white"/><path d="M50 40 L50 20 L70 30" stroke="#999" stroke-width="4" fill="none"/></svg>`,
     window: (_c) => `<svg viewBox="0 0 150 120"><rect x="10" y="10" width="130" height="100" fill="#A2D2FF" stroke="white" stroke-width="6"/><line x1="75" y1="10" x2="75" y2="110" stroke="white" stroke-width="6"/><line x1="10" y1="60" x2="140" y2="60" stroke="white" stroke-width="6"/></svg>`,
-    shelf: (c) => `<svg viewBox="0 0 150 40"><rect x="0" y="0" width="150" height="10" rx="2" fill="${c}"/><rect x="20" y="10" width="5" height="20" fill="#999"/><rect x="125" y="10" width="5" height="20" fill="#999"/></svg>`
+    shelf: (c) => `<svg viewBox="0 0 150 40"><rect x="0" y="0" width="150" height="10" rx="2" fill="${c}"/><rect x="20" y="10" width="5" height="20" fill="#999"/><rect x="125" y="10" width="5" height="20" fill="#999"/></svg>`,
+    stool: (c) => `<svg viewBox="0 0 60 60"><circle cx="30" cy="20" r="18" fill="${c}"/><rect x="15" y="20" width="5" height="35" fill="#5D4037"/><rect x="40" y="20" width="5" height="35" fill="#5D4037"/></svg>`,
+    bench: (c) => `<svg viewBox="0 0 120 60"><rect x="10" y="10" width="100" height="15" rx="2" fill="${c}"/><rect x="20" y="25" width="8" height="30" fill="#5D4037"/><rect x="92" y="25" width="8" height="30" fill="#5D4037"/></svg>`,
+    coffee_table: (c) => `<svg viewBox="0 0 100 50"><rect x="10" y="10" width="80" height="10" fill="${c}"/><rect x="15" y="20" width="5" height="25" fill="#5D4037"/><rect x="80" y="20" width="5" height="25" fill="#5D4037"/></svg>`,
+    desk: (c) => `<svg viewBox="0 0 120 100"><rect x="10" y="20" width="100" height="10" fill="${c}"/><rect x="15" y="30" width="5" height="60" fill="#5D4037"/><rect x="80" y="30" width="30" height="60" fill="${c}" filter="brightness(0.9)"/><rect x="85" y="35" width="20" height="15" fill="rgba(0,0,0,0.1)"/><rect x="85" y="55" width="20" height="15" fill="rgba(0,0,0,0.1)"/></svg>`,
+    nightstand: (c) => `<svg viewBox="0 0 50 60"><rect x="5" y="10" width="40" height="45" fill="${c}"/><rect x="10" y="15" width="30" height="15" fill="rgba(0,0,0,0.1)"/><circle cx="25" cy="22" r="2" fill="#333"/></svg>`,
+    dresser: (c) => `<svg viewBox="0 0 120 80"><rect x="10" y="10" width="100" height="65" fill="${c}"/><rect x="15" y="15" width="90" height="18" fill="rgba(0,0,0,0.1)"/><rect x="15" y="36" width="90" height="18" fill="rgba(0,0,0,0.1)"/><rect x="15" y="57" width="90" height="18" fill="rgba(0,0,0,0.1)"/></svg>`,
+    bookshelf: (c) => `<svg viewBox="0 0 80 140"><rect x="10" y="10" width="60" height="120" fill="${c}"/><rect x="15" y="15" width="50" height="110" fill="#333"/><rect x="15" y="35" width="50" height="5" fill="${c}"/><rect x="15" y="60" width="50" height="5" fill="${c}"/><rect x="15" y="85" width="50" height="5" fill="${c}"/><rect x="15" y="110" width="50" height="5" fill="${c}"/></svg>`,
+    wardrobe: (c) => `<svg viewBox="0 0 100 160"><rect x="10" y="10" width="80" height="140" fill="${c}"/><line x1="50" y1="15" x2="50" y2="145" stroke="rgba(0,0,0,0.2)" stroke-width="2"/><circle cx="45" cy="80" r="3" fill="#333"/><circle cx="55" cy="80" r="3" fill="#333"/></svg>`,
+    kitchen_counter: (c) => `<svg viewBox="0 0 100 100"><rect x="10" y="30" width="80" height="65" fill="${c}"/><rect x="5" y="25" width="90" height="10" fill="#ccc"/></svg>`,
+    oven: (c) => `<svg viewBox="0 0 80 100"><rect x="10" y="10" width="60" height="80" fill="${c}"/><rect x="15" y="15" width="50" height="15" fill="#333"/><circle cx="25" cy="22" r="3" fill="red"/><circle cx="40" cy="22" r="3" fill="red"/><circle cx="55" cy="22" r="3" fill="red"/><rect x="15" y="40" width="50" height="40" fill="#222" rx="2"/><rect x="18" y="43" width="44" height="34" fill="#111" rx="1"/></svg>`,
+    microwave: (c) => `<svg viewBox="0 0 60 40"><rect x="5" y="5" width="50" height="30" fill="${c}"/><rect x="35" y="8" width="15" height="24" fill="#222"/><rect x="8" y="8" width="25" height="24" fill="#444"/></svg>`,
+    washer: (c) => `<svg viewBox="0 0 80 100"><rect x="10" y="10" width="60" height="80" fill="${c}"/><circle cx="40" cy="50" r="25" fill="#ddd" stroke="#888" stroke-width="3"/><circle cx="40" cy="50" r="20" fill="#333" opacity="0.5"/><rect x="15" y="15" width="20" height="5" fill="#888"/><circle cx="55" cy="18" r="3" fill="red"/></svg>`,
+    shower: (_c) => `<svg viewBox="0 0 100 160"><rect x="10" y="10" width="80" height="140" fill="none" stroke="#aaa" stroke-width="2"/><rect x="12" y="12" width="76" height="136" fill="#A2D2FF" opacity="0.3"/><line x1="10" y1="140" x2="90" y2="140" stroke="#aaa" stroke-width="2"/><circle cx="50" cy="30" r="10" fill="none" stroke="#888" stroke-width="2"/></svg>`,
+    mirror_wall: (_c) => `<svg viewBox="0 0 60 80"><rect x="5" y="5" width="50" height="70" fill="#A2D2FF" stroke="#Silver" stroke-width="4" opacity="0.6"/><path d="M10 70 L50 10" stroke="white" stroke-width="2" opacity="0.5"/></svg>`,
+    painting: (c) => `<svg viewBox="0 0 80 60"><rect x="5" y="5" width="70" height="50" fill="#fff" stroke="${c}" stroke-width="4"/><circle cx="25" cy="25" r="10" fill="orange"/><rect x="40" y="30" width="20" height="10" fill="green"/></svg>`,
+    clock_wall: (c) => `<svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="22" fill="${c}" stroke="#333" stroke-width="2"/><line x1="25" y1="25" x2="25" y2="10" stroke="#333" stroke-width="2"/><line x1="25" y1="25" x2="35" y2="25" stroke="#333" stroke-width="2"/></svg>`,
+    crib: (c) => `<svg viewBox="0 0 80 60"><rect x="5" y="20" width="70" height="35" fill="none" stroke="${c}" stroke-width="2"/><rect x="5" y="20" width="5" height="35" fill="${c}"/><rect x="70" y="20" width="5" height="35" fill="${c}"/><line x1="15" y1="20" x2="15" y2="55" stroke="${c}"/><line x1="25" y1="20" x2="25" y2="55" stroke="${c}"/><line x1="35" y1="20" x2="35" y2="55" stroke="${c}"/><line x1="45" y1="20" x2="45" y2="55" stroke="${c}"/><line x1="55" y1="20" x2="55" y2="55" stroke="${c}"/><line x1="65" y1="20" x2="65" y2="55" stroke="${c}"/></svg>`,
+    bean_bag: (c) => `<svg viewBox="0 0 80 70"><path d="M20 60 Q10 10 40 10 Q70 10 60 60 Q40 70 20 60" fill="${c}"/></svg>`,
+    piano: (_c) => `<svg viewBox="0 0 100 100"><rect x="10" y="20" width="80" height="60" fill="#111"/><rect x="10" y="50" width="80" height="15" fill="#fff"/><line x1="15" y1="50" x2="15" y2="65" stroke="#111"/><line x1="20" y1="50" x2="20" y2="65" stroke="#111"/><line x1="25" y1="50" x2="25" y2="65" stroke="#111"/><line x1="30" y1="50" x2="30" y2="65" stroke="#111"/><rect x="18" y="50" width="3" height="10" fill="#000"/><rect x="28" y="50" width="3" height="10" fill="#000"/></svg>`,
+    fireplace: (_c) => `<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#8D6E63"/><rect x="30" y="40" width="40" height="50" fill="#333"/><path d="M40 80 L50 60 L60 80" fill="orange"/><path d="M45 80 L50 65 L55 80" fill="yellow"/></svg>`
 };
 
 export const ASSETS_CHAR: Record<string, string> = {
@@ -42,7 +62,9 @@ const CATALOG_DATA: Record<string, CatalogItem[]> = {
     'Bed & Bath': [],
     'Decor': [],
     'Electronics': [],
-    'Plants': []
+    'Plants': [],
+    'Kitchen': [],
+    'Utility': []
 };
 
 function addItem(cat: string, name: string, template: string, colors: string[], type: string = 'furniture', w: number | null = null, h: number | null = null) {
@@ -95,11 +117,44 @@ addItem('Decor', 'Round Rug', 'rug_round', COLORS.fabric, 'furniture-back', 120,
 addItem('Decor', 'Rect Rug', 'rug_rect', COLORS.fabric, 'furniture-back', 120, 80);
 addItem('Decor', 'Window', 'window', ['#fff'], 'furniture-wall', 150, 120);
 
+// New Seating
+addItem('Seating', 'Wooden Stool', 'stool', COLORS.wood, 'furniture', 60, 60);
+addItem('Seating', 'Bench', 'bench', [...COLORS.wood, ...COLORS.neutral], 'furniture', 120, 60);
+addItem('Seating', 'Bean Bag', 'bean_bag', COLORS.fabric, 'furniture', 80, 70);
+
+// New Tables
+addItem('Tables', 'Coffee Table', 'coffee_table', COLORS.wood, 'furniture', 100, 50);
+addItem('Tables', 'Office Desk', 'desk', [...COLORS.wood, '#333'], 'furniture', 120, 100);
+
+// Kitchen
+addItem('Kitchen', 'Kitchen Counter', 'kitchen_counter', [...COLORS.wood, '#fff', '#333'], 'furniture', 100, 100);
+addItem('Kitchen', 'Oven', 'oven', ['#eee', '#333', '#fff'], 'furniture', 80, 100);
+addItem('Kitchen', 'Microwave', 'microwave', ['#eee', '#333'], 'furniture-complex', 60, 40);
+
+// Utility
+addItem('Utility', 'Washing Machine', 'washer', ['#fff', '#eee'], 'furniture', 80, 100);
+addItem('Storage', 'Bookshelf', 'bookshelf', COLORS.wood, 'furniture', 80, 140);
+
+// Bed & Bath additions
+addItem('Bed & Bath', 'Nightstand', 'nightstand', COLORS.wood, 'furniture', 50, 60);
+addItem('Bed & Bath', 'Dresser', 'dresser', COLORS.wood, 'furniture', 120, 80);
+addItem('Bed & Bath', 'Wardrobe', 'wardrobe', COLORS.wood, 'furniture', 100, 160);
+addItem('Bed & Bath', 'Shower Cabin', 'shower', ['#fff'], 'furniture', 100, 160);
+addItem('Bed & Bath', 'Baby Crib', 'crib', [...COLORS.wood, '#fff'], 'furniture', 80, 60);
+
+// Decor additions
+addItem('Decor', 'Wall Mirror', 'mirror_wall', ['#fff'], 'furniture-wall', 60, 80);
+addItem('Decor', 'Abstract Art', 'painting', ['#333', '#8D6E63'], 'furniture-wall', 80, 60);
+addItem('Decor', 'Wall Clock', 'clock_wall', ['#333', '#fff', '#8D6E63'], 'furniture-wall', 50, 50);
+addItem('Decor', 'Grand Piano', 'piano', ['#000', '#fff', '#5D4037'], 'furniture', 100, 100);
+addItem('Decor', 'Fireplace', 'fireplace', ['#5D4037', '#333'], 'furniture-back', 100, 100);
+
 const EMOJIS: Record<string, string[]> = {
-    'Decor': ['🧸', '🎁', '⏰', '📚', '🎨', '🖼️', '🕯️', '🏺', '🎈'],
-    'Electronics': ['📻', '📷', '📞', '⏰', '📹', '🎮'],
-    'Plants': ['🌵', '🌲', '💐', '🌻', '🪴'],
-    'Kitchen': ['🍕', '🍔', '🍟', '🌭', '🍿', '🥞', '🥐', '🥯', '🍞', '🧀', '🥗', '🥪', '🌮', '🌯', '🍜', '🍝', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🧃', '🥤', '🍳', '🥘', '🍲', '🥣']
+    'Decor': ['🧸', '🎁', '⏰', '📚', '🎨', '🖼️', '🕯️', '🏺', '🎈', '🗝️', '🧱', '🪜', '🗿', '🧵', '🧶', '🧷'],
+    'Electronics': ['📻', '📷', '📞', '⏰', '📹', '🎮', '📱', '💻', '⌨️', '🖱️', '🖨️', '🔦', '💡'],
+    'Plants': ['🌵', '🌲', '💐', '🌻', '🪴', '🌹', '🥀', '🌺', '🌷', '🪷', '🍁', '🍂', '🍃', '🍄', '🌾', '🌿'],
+    'Kitchen': ['🍕', '🍔', '🍟', '🌭', '🍿', '🥞', '🥐', '🥯', '🍞', '🧀', '🥗', '🥪', '🌮', '🌯', '🍜', '🍝', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🧃', '🥤', '🍳', '🥘', '🍲', '🥣', '🥢', '🍴', '🥄', '🔪', '🥡', '🧂', '🥫'],
+    'Utility': ['🧹', '🧽', '🪣', '🧼', '🧺', '🔌', '🔋', '🧯', '🛠️', '🔨', '🔧', '🪛', '🪚', '🪜', '🗑️']
 };
 
 for (let cat in EMOJIS) {
