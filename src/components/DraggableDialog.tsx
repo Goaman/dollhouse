@@ -12,8 +12,13 @@ interface DraggableDialogProps {
 
 export function DraggableDialog({ title, onClose, children, initialX, initialY, className = '', width = 'max-w-md' }: DraggableDialogProps) {
     const [position, setPosition] = useState({ x: initialX ?? 0, y: initialY ?? 0 });
+    const [size, setSize] = useState<{ width?: number, height?: number }>({});
     const [isDragging, setIsDragging] = useState(false);
+    const [isResizing, setIsResizing] = useState(false);
+    
+    const dialogRef = useRef<HTMLDivElement>(null);
     const dragStartRef = useRef<{ x: number, y: number } | null>(null);
+    const resizeStartRef = useRef<{ x: number, y: number, width: number, height: number } | null>(null);
     const initializedRef = useRef(false);
 
     // Center initially if no position provided
@@ -28,6 +33,8 @@ export function DraggableDialog({ title, onClose, children, initialX, initialY, 
     }, [initialX, initialY]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
+        if (e.target instanceof Element && e.target.closest('.resize-handle')) return;
+        
         setIsDragging(true);
         dragStartRef.current = {
             x: e.clientX - position.x,
@@ -36,20 +43,46 @@ export function DraggableDialog({ title, onClose, children, initialX, initialY, 
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-        if (!isDragging || !dragStartRef.current) return;
-        setPosition({
-            x: e.clientX - dragStartRef.current.x,
-            y: e.clientY - dragStartRef.current.y
-        });
+        if (isDragging && dragStartRef.current) {
+            setPosition({
+                x: e.clientX - dragStartRef.current.x,
+                y: e.clientY - dragStartRef.current.y
+            });
+        } else if (isResizing && resizeStartRef.current) {
+            const deltaX = e.clientX - resizeStartRef.current.x;
+            const deltaY = e.clientY - resizeStartRef.current.y;
+            
+            setSize({
+                width: Math.max(300, resizeStartRef.current.width + deltaX),
+                height: Math.max(200, resizeStartRef.current.height + deltaY)
+            });
+        }
     };
 
     const handleMouseUp = () => {
         setIsDragging(false);
+        setIsResizing(false);
         dragStartRef.current = null;
+        resizeStartRef.current = null;
+    };
+
+    const handleResizeMouseDown = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        e.preventDefault();
+        if (!dialogRef.current) return;
+
+        const rect = dialogRef.current.getBoundingClientRect();
+        setIsResizing(true);
+        resizeStartRef.current = {
+            x: e.clientX,
+            y: e.clientY,
+            width: rect.width,
+            height: rect.height
+        };
     };
 
     useEffect(() => {
-        if (isDragging) {
+        if (isDragging || isResizing) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
         } else {
@@ -60,14 +93,19 @@ export function DraggableDialog({ title, onClose, children, initialX, initialY, 
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-    }, [isDragging]);
+    }, [isDragging, isResizing]);
 
     return (
         <div 
+            ref={dialogRef}
             className={`fixed bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col pointer-events-auto z-[500] ${width} ${className}`}
             style={{ 
                 left: `${position.x}px`, 
                 top: `${position.y}px`,
+                width: size.width ? `${size.width}px` : undefined,
+                height: size.height ? `${size.height}px` : undefined,
+                maxWidth: size.width ? 'none' : undefined,
+                maxHeight: size.height ? 'none' : '80vh'
             }}
         >
             <div 
@@ -83,8 +121,19 @@ export function DraggableDialog({ title, onClose, children, initialX, initialY, 
                     &times;
                 </button>
             </div>
-            <div className="overflow-auto max-h-[80vh]">
+            <div className="overflow-auto flex-1 relative">
                 {children}
+            </div>
+            
+            {/* Resize Handle */}
+            <div 
+                className="resize-handle absolute bottom-0 right-0 w-6 h-6 cursor-se-resize flex items-center justify-center z-10"
+                onMouseDown={handleResizeMouseDown}
+            >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-50">
+                    <path d="M10 2L2 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    <path d="M10 6L6 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                </svg>
             </div>
         </div>
     );
