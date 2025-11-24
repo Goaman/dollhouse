@@ -40,7 +40,32 @@ export const SVG_TEMPLATES: Record<string, (c: string) => string> = {
     crib: (c) => `<svg viewBox="0 0 80 60"><rect x="5" y="20" width="70" height="35" fill="none" stroke="${c}" stroke-width="2"/><rect x="5" y="20" width="5" height="35" fill="${c}"/><rect x="70" y="20" width="5" height="35" fill="${c}"/><line x1="15" y1="20" x2="15" y2="55" stroke="${c}"/><line x1="25" y1="20" x2="25" y2="55" stroke="${c}"/><line x1="35" y1="20" x2="35" y2="55" stroke="${c}"/><line x1="45" y1="20" x2="45" y2="55" stroke="${c}"/><line x1="55" y1="20" x2="55" y2="55" stroke="${c}"/><line x1="65" y1="20" x2="65" y2="55" stroke="${c}"/></svg>`,
     bean_bag: (c) => `<svg viewBox="0 0 80 70"><path d="M20 60 Q10 10 40 10 Q70 10 60 60 Q40 70 20 60" fill="${c}"/></svg>`,
     piano: (_c) => `<svg viewBox="0 0 100 100"><rect x="10" y="20" width="80" height="60" fill="#111"/><rect x="10" y="50" width="80" height="15" fill="#fff"/><line x1="15" y1="50" x2="15" y2="65" stroke="#111"/><line x1="20" y1="50" x2="20" y2="65" stroke="#111"/><line x1="25" y1="50" x2="25" y2="65" stroke="#111"/><line x1="30" y1="50" x2="30" y2="65" stroke="#111"/><rect x="18" y="50" width="3" height="10" fill="#000"/><rect x="28" y="50" width="3" height="10" fill="#000"/></svg>`,
-    fireplace: (_c) => `<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#8D6E63"/><rect x="30" y="40" width="40" height="50" fill="#333"/><path d="M40 80 L50 60 L60 80" fill="orange"/><path d="M45 80 L50 65 L55 80" fill="yellow"/></svg>`
+    fireplace: (_c) => `<svg viewBox="0 0 100 100"><rect x="10" y="10" width="80" height="80" fill="#8D6E63"/><rect x="30" y="40" width="40" height="50" fill="#333"/><path d="M40 80 L50 60 L60 80" fill="orange"/><path d="M45 80 L50 65 L55 80" fill="yellow"/></svg>`,
+    stool_bar: (c) => `<svg viewBox="0 0 60 100"><circle cx="30" cy="20" r="18" fill="${c}"/><rect x="20" y="20" width="5" height="75" fill="#555"/><rect x="35" y="20" width="5" height="75" fill="#555"/><rect x="15" y="80" width="30" height="5" fill="#555"/></svg>`,
+    chair_office: (c) => `<svg viewBox="0 0 80 110"><rect x="15" y="60" width="50" height="10" fill="${c}"/><rect x="35" y="70" width="10" height="30" fill="#333"/><rect x="10" y="100" width="60" height="10" fill="#333"/><rect x="15" y="10" width="50" height="50" rx="5" fill="${c}"/><rect x="10" y="50" width="10" height="20" fill="#333"/><rect x="60" y="50" width="10" height="20" fill="#333"/></svg>`,
+    pouf: (c) => `<svg viewBox="0 0 70 50"><ellipse cx="35" cy="25" rx="30" ry="20" fill="${c}"/><ellipse cx="35" cy="15" rx="25" ry="10" fill="rgba(255,255,255,0.2)"/></svg>`,
+    chaise_longue: (c) => `<svg viewBox="0 0 160 80"><path d="M20 40 Q20 10 50 10 L140 40 Q160 50 140 70 L20 70 Z" fill="${c}"/><rect x="20" y="70" width="10" height="10" fill="#5D4037"/><rect x="130" y="70" width="10" height="10" fill="#5D4037"/></svg>`,
+    bench_park: (c) => `<svg viewBox="0 0 120 70"><rect x="10" y="30" width="100" height="10" fill="${c}"/><rect x="10" y="10" width="100" height="20" fill="${c}"/><rect x="15" y="40" width="5" height="25" fill="#333"/><rect x="100" y="40" width="5" height="25" fill="#333"/><path d="M10 30 L15 10" stroke="#333" stroke-width="2"/><path d="M110 30 L105 10" stroke="#333" stroke-width="2"/></svg>`,
+    desk_corner: (c) => `<svg viewBox="0 0 120 120"><path d="M10 10 L110 10 L110 50 L60 50 L60 110 L10 110 Z" fill="${c}"/><rect x="15" y="15" width="5" height="90" fill="rgba(0,0,0,0.1)"/></svg>`,
+    table_glass: (c) => `<svg viewBox="0 0 100 60"><rect x="10" y="10" width="80" height="10" fill="#A2D2FF" opacity="0.6"/><rect x="15" y="20" width="5" height="35" fill="#ccc"/><rect x="80" y="20" width="5" height="35" fill="#ccc"/></svg>`,
+    side_table_round: (c) => `<svg viewBox="0 0 60 60"><ellipse cx="30" cy="20" rx="25" ry="10" fill="${c}"/><rect x="28" y="30" width="4" height="25" fill="#5D4037"/><path d="M20 55 L40 55" stroke="#5D4037" stroke-width="4"/></svg>`,
+    shelf_corner: (c) => `<svg viewBox="0 0 80 120"><path d="M10 10 L70 10 L10 110 Z" fill="${c}"/><rect x="10" y="40" width="40" height="5" fill="#333"/><rect x="10" y="80" width="25" height="5" fill="#333"/></svg>`,
+    cabinet_glass: (c) => `<svg viewBox="0 0 80 120"><rect x="10" y="10" width="60" height="100" fill="${c}"/><rect x="15" y="15" width="50" height="40" fill="#A2D2FF" opacity="0.5"/><rect x="15" y="60" width="50" height="40" fill="#A2D2FF" opacity="0.5"/><rect x="38" y="10" width="4" height="100" fill="#555"/></svg>`,
+    chest: (c) => `<svg viewBox="0 0 80 50"><rect x="10" y="10" width="60" height="35" fill="${c}"/><path d="M10 10 Q40 0 70 10" fill="${c}" filter="brightness(1.1)"/><rect x="35" y="20" width="10" height="10" fill="gold" rx="2"/></svg>`,
+    bunk_bed: (c) => `<svg viewBox="0 0 160 140"><rect x="10" y="10" width="140" height="120" fill="none" stroke="#8D6E63" stroke-width="5"/><rect x="15" y="80" width="130" height="40" fill="${c}"/><rect x="15" y="20" width="130" height="40" fill="${c}"/><rect x="5" y="10" width="5" height="130" fill="#8D6E63"/><rect x="150" y="10" width="5" height="130" fill="#8D6E63"/><rect x="60" y="10" width="40" height="130" fill="none" stroke="#8D6E63" stroke-width="2"/></svg>`,
+    towel_rack: (c) => `<svg viewBox="0 0 60 100"><rect x="10" y="10" width="5" height="80" fill="#ccc"/><rect x="45" y="10" width="5" height="80" fill="#ccc"/><rect x="10" y="20" width="40" height="5" fill="#ccc"/><rect x="10" y="40" width="40" height="20" fill="${c}"/><rect x="10" y="70" width="40" height="5" fill="#ccc"/></svg>`,
+    vanity: (c) => `<svg viewBox="0 0 100 120"><rect x="10" y="60" width="80" height="50" fill="${c}"/><rect x="30" y="10" width="40" height="50" fill="#A2D2FF" stroke="#555" stroke-width="3"/><rect x="10" y="110" width="10" height="10" fill="#333"/><rect x="80" y="110" width="10" height="10" fill="#333"/></svg>`,
+    rug_oval: (c) => `<svg viewBox="0 0 120 80"><ellipse cx="60" cy="40" rx="55" ry="35" fill="${c}" opacity="0.8" stroke="white" stroke-width="2" stroke-dasharray="5,5"/></svg>`,
+    curtains: (c) => `<svg viewBox="0 0 120 120"><rect x="10" y="10" width="100" height="5" fill="#333"/><path d="M10 15 Q30 60 10 110 L40 110 Q50 60 40 15 Z" fill="${c}"/><path d="M110 15 Q90 60 110 110 L80 110 Q70 60 80 15 Z" fill="${c}"/></svg>`,
+    vase_floor: (c) => `<svg viewBox="0 0 40 100"><path d="M10 10 L30 10 L35 30 L20 100 L5 30 Z" fill="${c}"/></svg>`,
+    speaker_tower: (c) => `<svg viewBox="0 0 40 120"><rect x="5" y="5" width="30" height="110" fill="${c}"/><circle cx="20" cy="30" r="10" fill="#333"/><circle cx="20" cy="60" r="10" fill="#333"/><circle cx="20" cy="90" r="10" fill="#333"/></svg>`,
+    console: (c) => `<svg viewBox="0 0 80 30"><rect x="5" y="5" width="70" height="20" fill="${c}" rx="2"/><rect x="10" y="12" width="40" height="2" fill="#333"/><circle cx="65" cy="15" r="5" fill="red"/></svg>`,
+    dishwasher: (c) => `<svg viewBox="0 0 80 100"><rect x="10" y="10" width="60" height="80" fill="${c}" stroke="#ccc" stroke-width="2"/><rect x="15" y="20" width="50" height="5" fill="#333"/><line x1="10" y1="40" x2="70" y2="40" stroke="#ccc"/></svg>`,
+    hood: (c) => `<svg viewBox="0 0 80 60"><path d="M10 50 L70 50 L60 10 L20 10 Z" fill="${c}"/><rect x="35" y="0" width="10" height="10" fill="${c}"/></svg>`,
+    plant_hanging: (c) => `<svg viewBox="0 0 60 100"><line x1="30" y1="0" x2="30" y2="30" stroke="#333"/><path d="M15 30 L45 30 L40 50 L20 50 Z" fill="#8D6E63"/><path d="M20 50 Q10 80 20 90" fill="none" stroke="${c}" stroke-width="3"/><path d="M30 50 Q30 90 40 80" fill="none" stroke="${c}" stroke-width="3"/><path d="M40 50 Q60 70 50 90" fill="none" stroke="${c}" stroke-width="3"/></svg>`,
+    cactus: (c) => `<svg viewBox="0 0 60 80"><rect x="20" y="60" width="20" height="20" fill="#8D6E63"/><path d="M30 60 L30 20 M30 40 L10 30 M30 30 L50 20" stroke="${c}" stroke-width="10" stroke-linecap="round"/></svg>`,
+    ironing_board: (c) => `<svg viewBox="0 0 100 60"><path d="M10 20 L80 20 L95 30 L80 40 L10 40 Z" fill="${c}"/><line x1="30" y1="40" x2="20" y2="60" stroke="#555" stroke-width="3"/><line x1="70" y1="40" x2="80" y2="60" stroke="#555" stroke-width="3"/><line x1="30" y1="40" x2="80" y2="60" stroke="#555" stroke-width="3"/></svg>`,
+    vacuum: (c) => `<svg viewBox="0 0 60 100"><rect x="20" y="70" width="20" height="25" fill="${c}"/><circle cx="20" cy="90" r="5" fill="#333"/><circle cx="40" cy="90" r="5" fill="#333"/><rect x="28" y="20" width="4" height="50" fill="#555"/><rect x="20" y="10" width="20" height="10" fill="#333" rx="5"/></svg>`
 };
 
 export const ASSETS_CHAR: Record<string, string> = {
@@ -148,6 +173,50 @@ addItem('Decor', 'Abstract Art', 'painting', ['#333', '#8D6E63'], 'furniture-wal
 addItem('Decor', 'Wall Clock', 'clock_wall', ['#333', '#fff', '#8D6E63'], 'furniture-wall', 50, 50);
 addItem('Decor', 'Grand Piano', 'piano', ['#000', '#fff', '#5D4037'], 'furniture', 100, 100);
 addItem('Decor', 'Fireplace', 'fireplace', ['#5D4037', '#333'], 'furniture-back', 100, 100);
+
+// 100 New Furnitures Update
+// Seating
+addItem('Seating', 'Bar Stool', 'stool_bar', COLORS.wood, 'furniture', 40, 70);
+addItem('Seating', 'Office Chair', 'chair_office', ['#333', '#555', ...COLORS.fabric], 'furniture', 60, 80);
+addItem('Seating', 'Soft Pouf', 'pouf', COLORS.fabric, 'furniture', 50, 40);
+addItem('Seating', 'Chaise Longue', 'chaise_longue', COLORS.fabric, 'furniture', 120, 60);
+addItem('Seating', 'Park Bench', 'bench_park', COLORS.wood, 'furniture', 120, 60);
+
+// Tables
+addItem('Tables', 'Corner Desk', 'desk_corner', COLORS.wood, 'furniture', 100, 100);
+addItem('Tables', 'Glass Table', 'table_glass', ['#eee'], 'furniture', 80, 60);
+addItem('Tables', 'Side Table', 'side_table_round', COLORS.wood, 'furniture', 50, 50);
+
+// Storage
+addItem('Storage', 'Corner Shelf', 'shelf_corner', COLORS.wood, 'furniture-wall', 60, 100);
+addItem('Storage', 'Glass Cabinet', 'cabinet_glass', COLORS.wood, 'furniture', 80, 120);
+addItem('Storage', 'Treasure Chest', 'chest', COLORS.wood, 'furniture', 60, 40);
+
+// Bed & Bath
+addItem('Bed & Bath', 'Bunk Bed', 'bunk_bed', COLORS.wood, 'furniture', 140, 100);
+addItem('Bed & Bath', 'Towel Rack', 'towel_rack', ['#333', '#8D6E63'], 'furniture', 50, 80);
+addItem('Bed & Bath', 'Vanity Table', 'vanity', COLORS.wood, 'furniture', 80, 100);
+
+// Decor
+addItem('Decor', 'Oval Rug', 'rug_oval', COLORS.fabric, 'furniture-back', 100, 70);
+addItem('Decor', 'Curtains', 'curtains', COLORS.fabric, 'furniture-wall', 120, 120);
+addItem('Decor', 'Floor Vase', 'vase_floor', ['#fff', '#333', ...COLORS.fabric], 'furniture', 30, 80);
+
+// Electronics
+addItem('Electronics', 'Speaker Tower', 'speaker_tower', ['#111'], 'furniture', 30, 100);
+addItem('Electronics', 'Game Console', 'console', ['#111', '#fff'], 'furniture', 60, 20);
+
+// Kitchen
+addItem('Kitchen', 'Dishwasher', 'dishwasher', ['#fff', '#ccc', '#333'], 'furniture', 60, 80);
+addItem('Kitchen', 'Range Hood', 'hood', ['#ccc', '#333'], 'furniture-wall', 60, 40);
+
+// Plants
+addItem('Plants', 'Hanging Plant', 'plant_hanging', COLORS.plant, 'furniture-wall', 50, 80);
+addItem('Plants', 'Cactus', 'cactus', ['#5D8C44'], 'furniture', 40, 60);
+
+// Utility
+addItem('Utility', 'Ironing Board', 'ironing_board', ['#eee'], 'furniture', 100, 60);
+addItem('Utility', 'Vacuum', 'vacuum', ['#D00', '#333'], 'furniture', 40, 80);
 
 const EMOJIS: Record<string, string[]> = {
     'Decor': ['🧸', '🎁', '⏰', '📚', '🎨', '🖼️', '🕯️', '🏺', '🎈', '🗝️', '🧱', '🪜', '🗿', '🧵', '🧶', '🧷'],
