@@ -65,7 +65,12 @@ export const SVG_TEMPLATES: Record<string, (c: string) => string> = {
     plant_hanging: (c) => `<svg viewBox="0 0 60 100"><line x1="30" y1="0" x2="30" y2="30" stroke="#333"/><path d="M15 30 L45 30 L40 50 L20 50 Z" fill="#8D6E63"/><path d="M20 50 Q10 80 20 90" fill="none" stroke="${c}" stroke-width="3"/><path d="M30 50 Q30 90 40 80" fill="none" stroke="${c}" stroke-width="3"/><path d="M40 50 Q60 70 50 90" fill="none" stroke="${c}" stroke-width="3"/></svg>`,
     cactus: (c) => `<svg viewBox="0 0 60 80"><rect x="20" y="60" width="20" height="20" fill="#8D6E63"/><path d="M30 60 L30 20 M30 40 L10 30 M30 30 L50 20" stroke="${c}" stroke-width="10" stroke-linecap="round"/></svg>`,
     ironing_board: (c) => `<svg viewBox="0 0 100 60"><path d="M10 20 L80 20 L95 30 L80 40 L10 40 Z" fill="${c}"/><line x1="30" y1="40" x2="20" y2="60" stroke="#555" stroke-width="3"/><line x1="70" y1="40" x2="80" y2="60" stroke="#555" stroke-width="3"/><line x1="30" y1="40" x2="80" y2="60" stroke="#555" stroke-width="3"/></svg>`,
-    vacuum: (c) => `<svg viewBox="0 0 60 100"><rect x="20" y="70" width="20" height="25" fill="${c}"/><circle cx="20" cy="90" r="5" fill="#333"/><circle cx="40" cy="90" r="5" fill="#333"/><rect x="28" y="20" width="4" height="50" fill="#555"/><rect x="20" y="10" width="20" height="10" fill="#333" rx="5"/></svg>`
+    vacuum: (c) => `<svg viewBox="0 0 60 100"><rect x="20" y="70" width="20" height="25" fill="${c}"/><circle cx="20" cy="90" r="5" fill="#333"/><circle cx="40" cy="90" r="5" fill="#333"/><rect x="28" y="20" width="4" height="50" fill="#555"/><rect x="20" y="10" width="20" height="10" fill="#333" rx="5"/></svg>`,
+    // Pixel Art Style
+    pixel_heart: (c) => `<svg viewBox="0 0 100 100"><path d="M20 30 h20 v-10 h20 v10 h20 v20 h-10 v10 h-10 v10 h-10 v10 h-20 v-10 h-10 v-10 h-10 v-10 h-10 Z" fill="${c}"/></svg>`,
+    pixel_sword: (c) => `<svg viewBox="0 0 100 100"><rect x="40" y="60" width="20" height="20" fill="#8D6E63"/><rect x="30" y="50" width="40" height="10" fill="#5D4037"/><rect x="40" y="10" width="20" height="40" fill="#ccc"/><path d="M40 10 L50 0 L60 10 Z" fill="#ccc"/></svg>`,
+    pixel_potion: (c) => `<svg viewBox="0 0 60 80"><rect x="20" y="10" width="20" height="10" fill="#ccc"/><rect x="10" y="20" width="40" height="50" rx="5" fill="${c}" opacity="0.8"/><rect x="15" y="25" width="5" height="5" fill="white" opacity="0.5"/></svg>`,
+    pixel_chest: (c) => `<svg viewBox="0 0 80 60"><rect x="10" y="10" width="60" height="40" fill="${c}" stroke="#333" stroke-width="2"/><rect x="10" y="10" width="60" height="10" fill="#5D4037"/><rect x="35" y="25" width="10" height="10" fill="gold"/></svg>`
 };
 
 export const ASSETS_CHAR: Record<string, string> = {
@@ -218,12 +223,36 @@ addItem('Plants', 'Cactus', 'cactus', ['#5D8C44'], 'furniture', 40, 60);
 addItem('Utility', 'Ironing Board', 'ironing_board', ['#eee'], 'furniture', 100, 60);
 addItem('Utility', 'Vacuum', 'vacuum', ['#D00', '#333'], 'furniture', 40, 80);
 
+// Pixel Art Collection
+addItem('Decor', 'Pixel Heart', 'pixel_heart', ['#FF0000', '#FF9A9E'], 'furniture-wall', 50, 50);
+addItem('Decor', 'Pixel Sword', 'pixel_sword', ['#ccc'], 'furniture-wall', 50, 50);
+addItem('Decor', 'Pixel Potion', 'pixel_potion', ['#F00', '#00F', '#0F0'], 'furniture', 30, 40);
+addItem('Storage', 'Pixel Chest', 'pixel_chest', COLORS.wood, 'furniture', 60, 40);
+
 const EMOJIS: Record<string, string[]> = {
-    'Decor': ['🧸', '🎁', '⏰', '📚', '🎨', '🖼️', '🕯️', '🏺', '🎈', '🗝️', '🧱', '🪜', '🗿', '🧵', '🧶', '🧷'],
-    'Electronics': ['📻', '📷', '📞', '⏰', '📹', '🎮', '📱', '💻', '⌨️', '🖱️', '🖨️', '🔦', '💡'],
-    'Plants': ['🌵', '🌲', '💐', '🌻', '🪴', '🌹', '🥀', '🌺', '🌷', '🪷', '🍁', '🍂', '🍃', '🍄', '🌾', '🌿'],
-    'Kitchen': ['🍕', '🍔', '🍟', '🌭', '🍿', '🥞', '🥐', '🥯', '🍞', '🧀', '🥗', '🥪', '🌮', '🌯', '🍜', '🍝', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🧃', '🥤', '🍳', '🥘', '🍲', '🥣', '🥢', '🍴', '🥄', '🔪', '🥡', '🧂', '🥫'],
-    'Utility': ['🧹', '🧽', '🪣', '🧼', '🧺', '🔌', '🔋', '🧯', '🛠️', '🔨', '🔧', '🪛', '🪚', '🪜', '🗑️']
+    'Decor': [
+        '🧸', '🎁', '⏰', '📚', '🎨', '🖼️', '🕯️', '🏺', '🎈', '🗝️', '🧱', '🪜', '🗿', '🧵', '🧶', '🧷',
+        '🎎', '🎏', '🎐', '🧧', '🎀', '🎊', '🎉', '🎎', '🏮', '🪁', '🔮', '🧿', '🪬', '💈', '⚗️', '🔭', '🔬',
+        '🕳️', '💊', '💉', '🩸', '🧬', '🦠', '🧫', '🧪', '🌡️', '🛎️', '🧳', '⌛', '⏳', '⌚', '⏰', '⏱️', '⏲️', '🕰️', '🌡️', '🌂', '☂️', '⛱️', '⚡',
+        '❄️', '☃️', '⛄', '☄️', '🔥', '💧', '🌊', '🎲', '🎱', '🎳', '🏆', '🥇', '🥈', '🥉', '🥊', '🥋', '🥅'
+    ],
+    'Electronics': [
+        '📻', '📷', '📞', '⏰', '📹', '🎮', '📱', '💻', '⌨️', '🖱️', '🖨️', '🔦', '💡',
+        '📟', '📠', '🔋', '🔌', '📀', '💿', '💾', '🎥', '📽️', '📺', '🎙️', '🎚️', '🎛️', '📡', '🔭', '🔬'
+    ],
+    'Plants': [
+        '🌵', '🌲', '💐', '🌻', '🪴', '🌹', '🥀', '🌺', '🌷', '🪷', '🍁', '🍂', '🍃', '🍄', '🌾', '🌿',
+        '🌱', '🪴', '🌲', '🌳', '🌴', '🪵', '☘️', '🍀', '🎍', '🎋', '🍃', '🍂', '🍁', '🍄', '🌾', '💐',
+        '🌷', '🌹', '🥀', '🌺', '🌸', '🌼', '🌻'
+    ],
+    'Kitchen': [
+        '🍕', '🍔', '🍟', '🌭', '🍿', '🥞', '🥐', '🥯', '🍞', '🧀', '🥗', '🥪', '🌮', '🌯', '🍜', '🍝', '🍩', '🍪', '🎂', '🍰', '🧁', '🥧', '🍫', '🍬', '🍭', '🍮', '🍯', '🍼', '🥛', '☕', '🫖', '🍵', '🧃', '🥤', '🍳', '🥘', '🍲', '🥣', '🥢', '🍴', '🥄', '🔪', '🥡', '🧂', '🥫',
+        '🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🫐', '🍈', '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥦', '🥬', '🥒', '🌶️', '🫑', '🌽', '🥕', '🫒', '🧄', '🧅', '🥔', '🍠', '🥐', '🥯', '🍞', '🥖', '🥨', '🧀', '🥚', '🍳', '🧈', '🥞', '🧇', '🥓', '🥩', '🍗', '🍖', '🦴', '🌭', '🍔', '🍟', '🍕', '🫓', '🥪', '🥙', '🧆', '🌮', '🌯', '🫔', '🥗', '🥘', '🫕', '🥫', '🍝', '🍜', '🍲', '🍛', '🍣', '🍱', '🥟', '🦪', '🍤', '🍙', '🍚', '🍘', '🍥', '🥠', '🥮', '🍢', '🍡', '🍧', '🍨', '🍦', '🥧', '🧁', '🍰', '🎂', '🍮', '🍭', '🍬', '🍫', '🍿', '🍩', '🍪', '🌰', '🥜', '🍯', '🥛', '🍼', '🫖', '☕', '🍵', '🧃', '🥤', '🧋', '🍶', '🍺', '🍻', '🥂', '🍷', '🥃', '🍸', '🍹', '🧉', '🍾', '🧊', '🥄', '🍴', '🍽️', '🥣', '🥡', '🥢', '🧂'
+    ],
+    'Utility': [
+        '🧹', '🧽', '🪣', '🧼', '🧺', '🔌', '🔋', '🧯', '🛠️', '🔨', '🔧', '🪛', '🪚', '🪜', '🗑️',
+        '🪓', '⛏️', '⚒️', '🛡️', '🧱', '⛓️', '🧲', '🔫', '💣', '🧨', '🔪', '🗡️', '⚔️'
+    ]
 };
 
 for (let cat in EMOJIS) {
@@ -240,4 +269,3 @@ for (let cat in EMOJIS) {
 }
 
 export const CATALOG = CATALOG_DATA;
-
